@@ -1,0 +1,32 @@
+@use '../styles/variables' as *;
+
+.logo-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: $color-charcoal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-gold;
+
+  &__mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__svg {
+    width: 260px;
+    height: auto;
+  }
+
+  &__text {
+    font-family: $font-display;
+    font-size: 1.4rem;
+    color: $color-cream;
+    margin: 0;
+    text-transform: uppercase;
+  }
+}

@@ -1,0 +1,187 @@
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import Hero3D from '../components/Hero3D.jsx';
+import FloatingCard from '../components/FloatingCard.jsx';
+import RevealText from '../components/RevealText.jsx';
+import HorizontalGallery from '../components/HorizontalGallery.jsx';
+import './Home.scss';
+
+const galleryItems = [
+  { src: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=700', caption: 'Wedding Catering' },
+  { src: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=700', caption: 'Stone-Ground Masala' },
+  { src: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=700', caption: 'Cold-Pressed Oils' },
+  { src: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?q=80&w=700', caption: 'Corporate Events' },
+  { src: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=700&sat=-20', caption: 'Spice Blending' },
+];
+
+const businesses = [
+  {
+    key: 'catering',
+    name: 'MI Catering Services',
+    tagline: 'Authentic flavors, memorable events',
+    color: '#b5482c',
+    to: '/catering',
+    img: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800',
+  },
+  {
+    key: 'masala',
+    name: 'Ibrahim Masala Mill',
+    tagline: 'Freshly stone-ground spice tradition',
+    color: '#d97b1f',
+    to: '/masala-mill',
+    img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800',
+  },
+  {
+    key: 'oil',
+    name: 'Afia Cold Press Oil',
+    tagline: 'Pure wood-pressed chekku oils',
+    color: '#4f6b3b',
+    to: '/cold-press-oil',
+    img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=800',
+  },
+];
+
+export default function Home() {
+  return (
+    <div className="home">
+      <section className="hero">
+        <Hero3D />
+
+        <FloatingCard
+          icon="⭐"
+          title="4.9/5 Rating"
+          subtitle="1.2K+ Happy Customers"
+          delay={0.9}
+          style={{ top: '22%', left: '6%' }}
+        />
+        <FloatingCard
+          icon="🍛"
+          title="500+ Events"
+          subtitle="Catered With Care"
+          delay={1.1}
+          style={{ top: '18%', right: '6%' }}
+        />
+        <FloatingCard
+          icon="🌿"
+          title="FSSAI Certified"
+          subtitle="Hygiene Guaranteed"
+          delay={1.3}
+          style={{ bottom: '16%', left: '10%' }}
+        />
+
+        <div className="hero__content container">
+          <motion.p
+            className="eyebrow"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Trusted since generations
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
+            MI <span>Groups</span>
+          </motion.h1>
+          <motion.p
+            className="hero__sub"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            Three trusted family businesses — premium catering, stone-ground masala, and
+            traditional cold-pressed oils — united under one name you can rely on.
+          </motion.p>
+          <motion.div
+            className="hero__ctas"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <Link to="/catering" className="btn btn--primary">
+              Explore Catering
+            </Link>
+            <a href="#businesses" className="btn btn--outline">
+              View All Businesses
+            </a>
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="businesses" className="section businesses">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">Our Businesses</span>
+            <h2>One Family, Three Legacies</h2>
+            <p>
+              Each business carries its own identity and craftsmanship, backed by the same MI
+              Groups promise of quality and trust.
+            </p>
+          </div>
+
+          <div className="grid grid--3">
+            {businesses.map((b, i) => (
+              <motion.div
+                key={b.key}
+                className="business-card"
+                style={{ '--accent': b.color }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: i * 0.12 }}
+              >
+                <div
+                  className="business-card__img"
+                  style={{ backgroundImage: `url(${b.img})` }}
+                />
+                <div className="business-card__body">
+                  <h3>{b.name}</h3>
+                  <p>{b.tagline}</p>
+                  <Link to={b.to} className="btn btn--primary">
+                    Learn More →
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section gallery-section">
+        <div className="section-heading container">
+          <span className="eyebrow">Our Work</span>
+          <RevealText as="h2">Craft, Care and Tradition — In Every Frame</RevealText>
+        </div>
+        <HorizontalGallery items={galleryItems} />
+      </section>
+
+      <section className="section section--alt why">
+        <div className="container grid grid--2">
+          <div>
+            <span className="eyebrow">Why MI Groups</span>
+            <RevealText as="h2">Quality You Can Taste, Trust You Can Feel</RevealText>
+            <p>
+              From FSSAI-certified catering kitchens to traditional wood-pressed oil mills, every
+              MI Groups business is run with the same family values — hygiene, honesty, and
+              genuine craftsmanship passed down through generations.
+            </p>
+            <ul className="why__list">
+              <li>✔ FSSAI Licensed Catering Operations</li>
+              <li>✔ Stone-ground, preservative-free masalas</li>
+              <li>✔ Traditional wood/chekku cold-press extraction</li>
+              <li>✔ Direct-from-family, no middlemen pricing</li>
+            </ul>
+          </div>
+          <div className="why__stats grid grid--2">
+            <div className="card"><h3>15+</h3><p>Years of Family Trust</p></div>
+            <div className="card"><h3>500+</h3><p>Events Catered</p></div>
+            <div className="card"><h3>50+</h3><p>Masala Varieties</p></div>
+            <div className="card"><h3>100%</h3><p>Pure Cold-Pressed Oils</p></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,9 @@
+.hero3d {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  canvas {
+    outline: none;
+  }
+}

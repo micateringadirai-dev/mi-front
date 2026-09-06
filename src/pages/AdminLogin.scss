@@ -1,0 +1,31 @@
+@use '../styles/variables' as *;
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, $color-maroon, $color-charcoal);
+  padding: 2rem;
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+
+    h2 {
+      color: $color-maroon;
+    }
+
+    p {
+      color: #6b5c52;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+  }
+}

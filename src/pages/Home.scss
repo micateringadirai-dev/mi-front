@@ -1,0 +1,106 @@
+@use '../styles/variables' as *;
+
+.home {
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(circle at 50% 30%, $color-maroon, $color-charcoal 75%);
+    overflow: hidden;
+
+    &__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: $color-cream;
+
+      .eyebrow {
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: $color-gold-light;
+        font-weight: 600;
+      }
+
+      h1 {
+        font-size: clamp(3rem, 8vw, 6rem);
+        margin: 0.5rem 0;
+
+        span {
+          color: $color-gold;
+        }
+      }
+
+      &__sub,
+      .hero__sub {
+        max-width: 620px;
+        margin: 0 auto 2rem;
+        color: #e6d8c8;
+        font-size: 1.05rem;
+      }
+
+      .hero__ctas {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+    }
+  }
+
+  .business-card {
+    background: #fff;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    box-shadow: $shadow-soft;
+    border-top: 5px solid var(--accent, $color-gold);
+
+    &__img {
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    &__body {
+      padding: 1.75rem;
+
+      h3 {
+        color: var(--accent, $color-maroon);
+        margin-bottom: 0.4rem;
+      }
+
+      p {
+        color: #6b5c52;
+      }
+    }
+  }
+
+  .why__list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0 0;
+
+    li {
+      margin-bottom: 0.75rem;
+      color: #4a3a30;
+      font-weight: 500;
+    }
+  }
+
+  .why__stats .card {
+    text-align: center;
+
+    h3 {
+      font-size: 2.2rem;
+      color: $color-gold;
+      margin-bottom: 0.2rem;
+    }
+
+    p {
+      color: #6b5c52;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+}

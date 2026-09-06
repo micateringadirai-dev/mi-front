@@ -1,0 +1,103 @@
+@use '../styles/variables' as *;
+
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f6f1e9;
+  padding-top: 70px;
+
+  &__sidebar {
+    width: 240px;
+    background: $color-charcoal;
+    color: $color-cream;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: fixed;
+    top: 70px;
+    bottom: 0;
+
+    h3 {
+      color: $color-gold;
+      font-size: 1.2rem;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      button {
+        background: none;
+        border: none;
+        color: $color-cream;
+        text-align: left;
+        padding: 0.65rem 0.75rem;
+        border-radius: $radius-md;
+        cursor: pointer;
+        font-size: 0.9rem;
+
+        &.active,
+        &:hover {
+          background: rgba(212, 169, 79, 0.15);
+          color: $color-gold-light;
+        }
+      }
+    }
+
+    .logout-btn {
+      margin-top: auto;
+    }
+  }
+
+  &__content {
+    margin-left: 240px;
+    padding: 2rem;
+    flex: 1;
+  }
+
+  .overview-cards .card {
+    text-align: center;
+
+    h3 {
+      font-size: 2rem;
+      color: $color-gold;
+    }
+  }
+
+  .filters-bar {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0;
+
+    input,
+    select {
+      padding: 0.55rem 0.8rem;
+      border-radius: $radius-md;
+      border: 1px solid #ddd;
+    }
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: $radius-md;
+    overflow: hidden;
+
+    th,
+    td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background: #f0e6d8;
+      color: $color-maroon;
+    }
+  }
+}

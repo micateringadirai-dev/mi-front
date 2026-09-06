@@ -1,0 +1,68 @@
+@use '../styles/variables' as *;
+
+.footer {
+  background: $color-charcoal;
+  color: $color-cream;
+  padding: 4rem 0 0;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+
+    h3 {
+      font-size: 1.6rem;
+      span {
+        color: $color-gold;
+      }
+    }
+
+    h4 {
+      color: $color-gold-light;
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      color: #d8c9ba;
+      font-size: 0.9rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        margin-bottom: 0.6rem;
+      }
+
+      a {
+        color: #d8c9ba;
+        text-decoration: none;
+        font-size: 0.9rem;
+
+        &:hover {
+          color: $color-gold;
+        }
+      }
+    }
+
+    @media (max-width: 760px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.25rem 0;
+    text-align: center;
+
+    p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #a5968a;
+    }
+  }
+}
