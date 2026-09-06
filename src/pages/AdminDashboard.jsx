@@ -129,39 +129,41 @@ function CateringOrders() {
       {loading ? (
         <p>Loading orders...</p>
       ) : (
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Item / Event</th>
-              <th>Customer</th>
-              <th>Mobile</th>
-              <th>Packets</th>
-              <th>Order Date</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((o) => (
-              <tr key={o._id}>
-                <td>{o.itemName}</td>
-                <td>{o.customerName}</td>
-                <td>{o.mobileNumber}</td>
-                <td>{o.numberOfPackets}</td>
-                <td>{new Date(o.orderDate).toDateString()}</td>
-                <td>
-                  <select value={o.status} onChange={(e) => updateStatus(o._id, e.target.value)}>
-                    {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </td>
+        <div className="table-responsive">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Item / Event</th>
+                <th>Customer</th>
+                <th>Mobile</th>
+                <th>Packets</th>
+                <th>Order Date</th>
+                <th>Status</th>
               </tr>
-            ))}
-            {orders.length === 0 && (
-              <tr><td colSpan="6" style={{ textAlign: 'center' }}>No orders found</td></tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {orders.map((o) => (
+                <tr key={o._id}>
+                  <td>{o.itemName}</td>
+                  <td>{o.customerName}</td>
+                  <td>{o.mobileNumber}</td>
+                  <td>{o.numberOfPackets}</td>
+                  <td>{new Date(o.orderDate).toDateString()}</td>
+                  <td>
+                    <select value={o.status} onChange={(e) => updateStatus(o._id, e.target.value)}>
+                      {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+              {orders.length === 0 && (
+                <tr><td colSpan="6" style={{ textAlign: 'center' }}>No orders found</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
@@ -238,35 +240,37 @@ function EnquiryPanel({ resource, itemLabel }) {
       {loading ? (
         <p>Loading enquiries...</p>
       ) : (
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>{itemLabel}</th>
-              <th>Customer</th>
-              <th>Phone</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r._id}>
-                <td>{r.productName}</td>
-                <td>{r.customerName}</td>
-                <td>{r.phoneNumber}</td>
-                <td>
-                  <select value={r.status} onChange={(e) => updateStatus(r._id, e.target.value)}>
-                    {['New', 'Contacted', 'Confirmed', 'Closed'].map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </td>
+        <div className="table-responsive">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>{itemLabel}</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>Status</th>
               </tr>
-            ))}
-            {rows.length === 0 && (
-              <tr><td colSpan="4" style={{ textAlign: 'center' }}>No enquiries found</td></tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r._id}>
+                  <td>{r.productName}</td>
+                  <td>{r.customerName}</td>
+                  <td>{r.phoneNumber}</td>
+                  <td>
+                    <select value={r.status} onChange={(e) => updateStatus(r._id, e.target.value)}>
+                      {['New', 'Contacted', 'Confirmed', 'Closed'].map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+              ))}
+              {rows.length === 0 && (
+                <tr><td colSpan="4" style={{ textAlign: 'center' }}>No enquiries found</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

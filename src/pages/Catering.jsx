@@ -59,14 +59,14 @@ export default function Catering() {
 
   return (
     <div className="business-page business-page--catering">
-      {/* FSSAI license badge, top-left */}
-      <div className="fssai-badge">
-        <span className="fssai-badge__label">FSSAI Lic. No.</span>
-        <span className="fssai-badge__number">XXXXXXXXXXXXXXXX</span>
-      </div>
-
       <section className="business-hero">
         <div className="container">
+          {/* FSSAI license badge: absolute on desktop, clean centered pill on mobile */}
+          <div className="fssai-badge">
+            <span className="fssai-badge__label">FSSAI Lic. No.</span>
+            <span className="fssai-badge__number">XXXXXXXXXXXXXXXX</span>
+          </div>
+
           <span className="eyebrow">MI Catering Services</span>
           <h1>Authentic Flavors for Every Celebration</h1>
           <p>Weddings, housewarmings, corporate events &amp; daily catering — cooked with care.</p>

@@ -5,6 +5,10 @@
   color: $color-cream;
   padding: 4rem 0 0;
 
+  @media (max-width: 760px) {
+    padding: 3rem 0 0;
+  }
+
   &__grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
@@ -51,6 +55,7 @@
 
     @media (max-width: 760px) {
       grid-template-columns: 1fr;
+      gap: 2rem;
     }
   }
 
@@ -64,5 +69,10 @@
       font-size: 0.8rem;
       color: #a5968a;
     }
+
+    @media (max-width: 760px) {
+      padding: 1.25rem 0 calc(1.25rem + 56px); /* Extra clearance for WhatsApp FAB */
+    }
   }
 }
+

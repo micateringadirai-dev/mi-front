@@ -3,6 +3,18 @@
 .horizontal-gallery {
   overflow: hidden;
   background: #fff;
+  padding: 1rem 0 3.5rem;
+
+  &__hint {
+    display: none;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: $color-gold;
+    margin-bottom: 1.25rem;
+  }
 
   &__track {
     display: flex;
@@ -33,20 +45,49 @@
       left: 0;
       right: 0;
       padding: 1rem;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
     }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 0.5rem 0 2.5rem;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &__hint {
+      display: block;
+    }
+
+    &__track {
+      padding: 0 1.25rem;
+      gap: 1.1rem;
+    }
+
     &__item {
-      width: 220px;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      width: 74vw;
+      max-width: 270px;
+      border-radius: $radius-md;
 
       img {
-        height: 300px;
+        height: 310px;
+      }
+
+      figcaption {
+        font-size: 0.88rem;
+        padding: 0.85rem;
       }
     }
   }
 }
+

@@ -6,9 +6,8 @@ import './HorizontalGallery.scss';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * A row of images that scrolls sideways as the page scrolls down —
- * the "lookbook strip" effect used for the model-photo gallery in the
- * reference video. Pass an array of { src, caption }.
+ * A row of images that scrolls sideways as the page scrolls down on desktop,
+ * and seamlessly converts to a native swipeable lookbook on mobile.
  */
 export default function HorizontalGallery({ items = [] }) {
   const trackRef = useRef(null);
@@ -19,30 +18,38 @@ export default function HorizontalGallery({ items = [] }) {
     const section = sectionRef.current;
     if (!track || !section) return;
 
-    const scrollDistance = track.scrollWidth - section.offsetWidth;
-    if (scrollDistance <= 0) return;
+    const mm = gsap.matchMedia();
 
-    const anim = gsap.to(track, {
-      x: -scrollDistance,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${scrollDistance}`,
-        scrub: 0.6,
-        pin: true,
-        anticipatePin: 1,
-      },
+    // Only apply GSAP scroll pinning on screens wider than 768px
+    mm.add('(min-width: 769px)', () => {
+      const scrollDistance = track.scrollWidth - section.offsetWidth;
+      if (scrollDistance <= 0) return;
+
+      const anim = gsap.to(track, {
+        x: -scrollDistance,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 70px',
+          end: () => `+=${scrollDistance}`,
+          scrub: 0.6,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+      return () => {
+        anim.scrollTrigger?.kill();
+        anim.kill();
+      };
     });
 
-    return () => {
-      anim.scrollTrigger?.kill();
-      anim.kill();
-    };
+    return () => mm.revert();
   }, [items]);
 
   return (
-    <div className="horizontal-gallery" ref={sectionRef}>
+    <div className="horizontal-gallery" ref={sectionRef} data-lenis-prevent>
+      <div className="horizontal-gallery__hint">← Swipe to explore →</div>
       <div className="horizontal-gallery__track" ref={trackRef}>
         {items.map((item, i) => (
           <figure className="horizontal-gallery__item" key={i}>
@@ -54,3 +61,4 @@ export default function HorizontalGallery({ items = [] }) {
     </div>
   );
 }
+

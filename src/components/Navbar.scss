@@ -11,10 +11,11 @@
   background: transparent;
 
   &--scrolled {
-    background: rgba(20, 12, 10, 0.92);
-    backdrop-filter: blur(10px);
+    background: rgba(20, 12, 10, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 0.75rem 0;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
   }
 
   &__inner {
@@ -24,6 +25,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 600px) {
+      padding: 0 1.15rem;
+    }
   }
 
   &__brand {
@@ -33,6 +38,7 @@
     color: $color-cream;
     letter-spacing: 0.5px;
     text-decoration: none;
+    z-index: 110;
 
     span {
       color: $color-gold;
@@ -41,6 +47,7 @@
 
   &__links {
     display: flex;
+    align-items: center;
     gap: 2rem;
 
     a {
@@ -50,6 +57,7 @@
       font-weight: 500;
       position: relative;
       padding-bottom: 4px;
+      transition: color 0.25s ease;
 
       &::after {
         content: '';
@@ -73,19 +81,64 @@
     }
   }
 
+  &__drawer-header,
+  &__drawer-footer {
+    display: none;
+  }
+
+  &__drawer-links {
+    display: flex;
+    gap: 2rem;
+  }
+
   &__toggle {
     display: none;
     flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    width: 44px;
+    height: 44px;
     cursor: pointer;
+    z-index: 110;
+    padding: 0;
+    transition: all 0.25s ease;
 
     span {
-      width: 26px;
+      display: block;
+      width: 22px;
       height: 2px;
       background: $color-cream;
-      transition: 0.3s;
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.25s ease, background 0.3s ease;
+      transform-origin: center;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    &.is-open {
+      background: rgba(212, 169, 79, 0.15);
+      border-color: $color-gold;
+
+      span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+        background: $color-gold;
+      }
+
+      span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+
+      span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+        background: $color-gold;
+      }
     }
   }
 
@@ -95,17 +148,76 @@
       top: 0;
       right: -100%;
       height: 100vh;
-      width: 70%;
+      height: 100dvh;
+      width: 80%;
       max-width: 320px;
-      background: $color-charcoal;
+      background: linear-gradient(180deg, #1f1411 0%, $color-charcoal 100%);
       flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 2rem;
-      transition: right 0.35s ease;
+      justify-content: space-between;
+      align-items: stretch;
+      padding: 6rem 1.75rem 2.5rem;
+      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.5);
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 105;
+      box-sizing: border-box;
 
       &--open {
         right: 0;
+      }
+    }
+
+    &__drawer-header {
+      display: block;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+      .navbar__drawer-title {
+        font-family: $font-display;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: $color-cream;
+
+        span {
+          color: $color-gold;
+        }
+      }
+    }
+
+    &__drawer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+      margin: auto 0;
+
+      a {
+        display: block;
+        padding: 0.75rem 0.5rem;
+        font-size: 1.1rem;
+        border-radius: $radius-md;
+        transition: background 0.2s ease, padding-left 0.2s ease;
+
+        &::after {
+          display: none;
+        }
+
+        &:hover,
+        &.active {
+          background: rgba(212, 169, 79, 0.12);
+          color: $color-gold;
+          padding-left: 0.85rem;
+        }
+      }
+    }
+
+    &__drawer-footer {
+      display: block;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+      .btn {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -114,3 +226,23 @@
     }
   }
 }
+
+.navbar__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 4, 0.65);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
+
+  &--visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+

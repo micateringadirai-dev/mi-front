@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import './Navbar.scss';
 
 const links = [
@@ -12,6 +12,7 @@ const links = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -19,36 +20,81 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close menu when route changes
+  useEffect(() => {
+    setOpen(false);
+  }, [location]);
+
+  // Lock scroll when mobile menu is open & listen for Escape key
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      const onKeyDown = (e) => {
+        if (e.key === 'Escape') setOpen(false);
+      };
+      window.addEventListener('keydown', onKeyDown);
+      return () => {
+        document.body.style.overflow = '';
+        window.removeEventListener('keydown', onKeyDown);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [open]);
+
   return (
-    <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
-      <div className="navbar__inner">
-        <NavLink to="/" className="navbar__brand" onClick={() => setOpen(false)}>
-          MI <span>Groups</span>
-        </NavLink>
+    <>
+      <header className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
+        <div className="navbar__inner">
+          <NavLink to="/" className="navbar__brand" onClick={() => setOpen(false)}>
+            MI <span>Groups</span>
+          </NavLink>
 
-        <nav className={`navbar__links ${open ? 'navbar__links--open' : ''}`}>
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) => (isActive ? 'active' : '')}
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </NavLink>
-          ))}
-        </nav>
+          <nav className={`navbar__links ${open ? 'navbar__links--open' : ''}`}>
+            <div className="navbar__drawer-header">
+              <span className="navbar__drawer-title">MI <span>Groups</span></span>
+            </div>
 
-        <button
-          className={`navbar__toggle ${open ? 'is-open' : ''}`}
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-    </header>
+            <div className="navbar__drawer-links">
+              {links.map((l) => (
+                <NavLink
+                  key={l.to}
+                  to={l.to}
+                  className={({ isActive }) => (isActive ? 'active' : '')}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </NavLink>
+              ))}
+            </div>
+
+            <div className="navbar__drawer-footer">
+              <a href="tel:+919000000000" className="btn btn--outline btn--sm">
+                📞 Call Us
+              </a>
+            </div>
+          </nav>
+
+          <button
+            className={`navbar__toggle ${open ? 'is-open' : ''}`}
+            onClick={() => setOpen((o) => !o)}
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </header>
+
+      {/* Backdrop overlay for mobile menu drawer */}
+      <div
+        className={`navbar__overlay ${open ? 'navbar__overlay--visible' : ''}`}
+        onClick={() => setOpen(false)}
+        aria-hidden="true"
+      />
+    </>
   );
 }
+

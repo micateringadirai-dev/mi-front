@@ -11,14 +11,14 @@
   .fssai-badge {
     position: absolute;
     top: 90px;
-    left: 20px;
+    left: 24px;
     z-index: 20;
     background: #fff;
     border: 2px solid var(--accent);
     border-radius: 10px;
-    padding: 0.5rem 0.9rem;
+    padding: 0.45rem 0.85rem;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     line-height: 1.2;
 
@@ -35,13 +35,28 @@
       font-weight: 600;
       color: $color-charcoal;
     }
+
+    @media (max-width: 768px) {
+      position: static;
+      margin: 0 auto 1.25rem;
+      width: fit-content;
+      align-items: center;
+      text-align: center;
+      padding: 0.35rem 0.8rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
   }
 
   .business-hero {
+    position: relative;
     padding: 8rem 0 4rem;
     background: linear-gradient(135deg, var(--accent), $color-charcoal 85%);
     color: $color-cream;
     text-align: center;
+
+    @media (max-width: 768px) {
+      padding: calc(75px + 2rem) 0 3rem;
+    }
 
     .eyebrow {
       letter-spacing: 3px;
@@ -52,14 +67,24 @@
     }
 
     h1 {
-      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-size: clamp(2rem, 5.5vw, 3.4rem);
       margin: 0.5rem 0;
+
+      @media (max-width: 480px) {
+        font-size: 2.1rem;
+        line-height: 1.2;
+      }
     }
 
     p {
       max-width: 560px;
       margin: 0 auto 1.5rem;
       color: #f1e5d6;
+
+      @media (max-width: 600px) {
+        font-size: 0.95rem;
+        padding: 0 0.5rem;
+      }
     }
 
     &__ctas {
@@ -67,6 +92,21 @@
       gap: 1rem;
       justify-content: center;
       flex-wrap: wrap;
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+        gap: 0.75rem;
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+          padding: 0.85rem 1.5rem;
+        }
+      }
     }
   }
 
@@ -112,6 +152,9 @@
       background: linear-gradient(135deg, var(--accent), $color-gold);
       color: #fff;
       box-shadow: none;
+      padding: 0.9rem;
+      font-size: 1rem;
     }
   }
 }
+
