@@ -1,7 +1,14 @@
 import axios from 'axios';
 
+let rawBaseURL = (import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api').trim().replace(/\/+$/, '');
+
+// Auto-append /api if user supplied a root URL (e.g. https://my-app.onrender.com)
+if (rawBaseURL.startsWith('http') && !rawBaseURL.endsWith('/api')) {
+  rawBaseURL += '/api';
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || '/api',
+  baseURL: rawBaseURL,
 });
 
 api.interceptors.request.use((config) => {
