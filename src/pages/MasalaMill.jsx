@@ -6,9 +6,36 @@ import ProductDetailsModal from '../components/ProductDetailsModal.jsx';
 import { useCart } from '../context/CartContext.jsx';
 import './BusinessPage.scss';
 
+const defaultMasalaProducts = [
+  {
+    _id: 'chilli-sample',
+    name: 'Chilli Powder',
+    description: 'Freshly stone-ground from premium dried whole red chillies. Rich natural aroma and authentic flavor without chemicals.',
+    pricePerKg: 250,
+    availableQuantityKg: 50,
+    images: ['https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=600'],
+  },
+  {
+    _id: 'coriander-sample',
+    name: 'Coriander Powder (Malli Thool)',
+    description: 'Slow ground roasted whole coriander seeds, retaining pure natural essential oils and fragrant citrus notes.',
+    pricePerKg: 220,
+    availableQuantityKg: 40,
+    images: ['https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=600&sat=-15'],
+  },
+  {
+    _id: 'turmeric-sample',
+    name: 'Salem Turmeric Powder',
+    description: 'High curcumin golden Salem turmeric fingers stone-ground for rich medicinal aroma and pure quality.',
+    pricePerKg: 280,
+    availableQuantityKg: 35,
+    images: ['https://images.unsplash.com/photo-1615485500704-8e990f9900f7?q=80&w=600'],
+  },
+];
+
 export default function MasalaMill() {
   const { addToCart } = useCart();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(defaultMasalaProducts);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
@@ -23,8 +50,12 @@ export default function MasalaMill() {
   useEffect(() => {
     api
       .get('/masala/products')
-      .then((res) => setProducts(res.data.data))
-      .catch(() => toast.error('Could not load masala products'));
+      .then((res) => {
+        if (Array.isArray(res.data?.data) && res.data.data.length > 0) {
+          setProducts(res.data.data);
+        }
+      })
+      .catch((err) => console.warn('Could not load live masala products, using defaults:', err.message));
   }, []);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -106,8 +137,7 @@ export default function MasalaMill() {
             <h2>Available Spice Varieties</h2>
           </div>
           <div className="grid grid--3">
-            {products.length === 0 && <p style={{ textAlign: 'center' }}>Products will be listed here once added by the admin.</p>}
-            {products.map((p) => (
+            {(Array.isArray(products) ? products : defaultMasalaProducts).map((p) => (
               <div className="card product-card" key={p._id}>
                 <div
                   className="product-card__img"

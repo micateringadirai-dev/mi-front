@@ -6,8 +6,16 @@ import RevealText from '../components/RevealText.jsx';
 import miCateringLogo from '../assets/mi-catering-logo.png';
 import './BusinessPage.scss';
 
+const defaultEvents = [
+  { _id: 'wedding-pkg', title: 'Grand Wedding Feast (Biryani / Traditional Meals)' },
+  { _id: 'valima-pkg', title: 'Valima & Reception Buffet' },
+  { _id: 'housewarming', title: 'Housewarming / Kudikoodal Catering' },
+  { _id: 'corporate-pkg', title: 'Corporate Event / Conference Lunch' },
+  { _id: 'family-pkg', title: 'Family Gathering & Special Functions' },
+];
+
 export default function Catering() {
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(defaultEvents);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
@@ -24,8 +32,17 @@ export default function Catering() {
   useEffect(() => {
     api
       .get('/catering/events')
-      .then((res) => setEvents(res.data.data))
-      .catch(() => toast.error('Could not load catering events'))
+      .then((res) => {
+        if (Array.isArray(res.data?.data) && res.data.data.length > 0) {
+          setEvents(res.data.data);
+        } else {
+          setEvents(defaultEvents);
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not load live catering events, using default packages:', err.message);
+        setEvents(defaultEvents);
+      })
       .finally(() => setLoadingEvents(false));
   }, []);
 
@@ -124,9 +141,9 @@ export default function Catering() {
               ) : (
                 <select name="itemName" value={form.itemName} onChange={handleChange} required>
                   <option value="">-- Choose an item / event --</option>
-                  {events.map((ev) => (
+                  {(Array.isArray(events) ? events : defaultEvents).map((ev) => (
                     <option key={ev._id} value={ev.title}>
-                      {ev.title} — {new Date(ev.eventDate).toDateString()}
+                      {ev.title} {ev.eventDate ? `— ${new Date(ev.eventDate).toDateString()}` : ''}
                     </option>
                   ))}
                   <option value="Custom Order">Custom Order (specify in notes)</option>

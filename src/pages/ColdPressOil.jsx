@@ -25,11 +25,15 @@ export default function ColdPressOil() {
   useEffect(() => {
     api
       .get('/oil/products')
-      .then((res) => setProducts(res.data.data))
-      .catch(() => toast.error('Could not load oil products'));
+      .then((res) => {
+        if (Array.isArray(res.data?.data) && res.data.data.length > 0) {
+          setProducts(res.data.data);
+        }
+      })
+      .catch((err) => console.warn('Could not load live oil products, using defaults:', err.message));
   }, []);
 
-  const selectedProduct = products.find((p) => p.name === form.productName);
+  const selectedProduct = (Array.isArray(products) ? products : []).find((p) => p.name === form.productName);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -51,7 +55,7 @@ export default function ColdPressOil() {
     }
   };
 
-  const staticProducts = products.length
+  const staticProducts = Array.isArray(products) && products.length > 0
     ? products
     : [
         { _id: 'sesame', name: 'Sesame Oil (Nallennai)', description: 'Traditional wood-pressed sesame oil.', packageSizes: [{ size: '500ml', price: 250 }, { size: '1L', price: 480 }] },

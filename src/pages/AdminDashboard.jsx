@@ -179,7 +179,7 @@ function CateringOrders() {
       if (filters.status) params.status = filters.status;
       if (filters.search) params.search = filters.search;
       const res = await api.get('/catering/admin/orders', { params });
-      setOrders(res.data.data);
+      setOrders(Array.isArray(res.data?.data) ? res.data.data : []);
     } catch {
       toast.error('Failed to load orders');
     } finally {
@@ -345,7 +345,7 @@ function EnquiryPanel({ resource, itemLabel }) {
       if (status) params.status = status;
       if (search) params.search = search;
       const res = await api.get(`/${resource}/admin/enquiries`, { params });
-      setRows(res.data.data);
+      setRows(Array.isArray(res.data?.data) ? res.data.data : []);
     } catch {
       toast.error('Failed to load enquiries');
     } finally {
