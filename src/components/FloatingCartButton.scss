@@ -1,0 +1,81 @@
+@use '../styles/variables' as *;
+
+.floating-cart-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 90px; // Placed nicely next to the WhatsApp button (which is at right: 24px)
+  z-index: 95;
+  background: linear-gradient(135deg, $color-maroon 0%, #1a0808 100%);
+  color: #ffffff;
+  border: 2px solid $color-gold;
+  border-radius: 50px;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 30px rgba(58, 15, 15, 0.45);
+  cursor: pointer;
+  font-family: $font-body;
+  font-weight: 700;
+  font-size: 0.95rem;
+  animation: bounceIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 14px 35px rgba(212, 169, 79, 0.4);
+    border-color: $color-gold-light;
+  }
+
+  .cart-icon {
+    font-size: 1.15rem;
+  }
+
+  .cart-count {
+    background: $color-gold;
+    color: #120a08;
+    padding: 0.15rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .cart-divider {
+    opacity: 0.4;
+    font-weight: 300;
+  }
+
+  .cart-amount {
+    color: $color-gold-light;
+    font-size: 0.92rem;
+  }
+
+  @media (max-width: 600px) {
+    bottom: 20px;
+    right: 80px;
+    padding: 0.65rem 1rem;
+    font-size: 0.88rem;
+
+    .cart-amount {
+      display: none; // Compact on small mobile
+    }
+    .cart-divider {
+      display: none;
+    }
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(20px);
+  }
+  70% {
+    transform: scale(1.08) translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

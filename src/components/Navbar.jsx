@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useCart } from '../context/CartContext.jsx';
 import './Navbar.scss';
 
 const links = [
   { to: '/', label: 'Home' },
   { to: '/catering', label: 'MI Catering' },
   { to: '/masala-mill', label: 'Ibrahim Masala Mill' },
-  { to: '/cold-press-oil', label: 'Afia Cold Press Oil' },
+  { to: '/cold-press-oil', label: 'Aafiya Cold Pressed Oils' },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { totalCount, openCart } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -69,22 +71,48 @@ export default function Navbar() {
             </div>
 
             <div className="navbar__drawer-footer">
-              <a href="tel:+919000000000" className="btn btn--outline btn--sm">
+              <button
+                type="button"
+                className="btn btn--primary btn--sm"
+                onClick={() => {
+                  setOpen(false);
+                  openCart();
+                }}
+              >
+                🛒 View Cart ({totalCount})
+              </button>
+              <a
+                href={location.pathname.startsWith('/catering') ? 'tel:+919842096814' : 'tel:+919629533887'}
+                className="btn btn--outline btn--sm"
+              >
                 📞 Call Us
               </a>
             </div>
           </nav>
 
-          <button
-            className={`navbar__toggle ${open ? 'is-open' : ''}`}
-            onClick={() => setOpen((o) => !o)}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            aria-expanded={open}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <div className="navbar__actions">
+            <button
+              type="button"
+              className="navbar__cart-btn"
+              onClick={openCart}
+              aria-label="Shopping Cart"
+              title="View Cart"
+            >
+              <span className="nav-cart-icon">🛒</span>
+              {totalCount > 0 && <span className="nav-cart-badge">{totalCount}</span>}
+            </button>
+
+            <button
+              className={`navbar__toggle ${open ? 'is-open' : ''}`}
+              onClick={() => setOpen((o) => !o)}
+              aria-label={open ? 'Close menu' : 'Open menu'}
+              aria-expanded={open}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
         </div>
       </header>
 

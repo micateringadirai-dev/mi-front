@@ -91,6 +91,57 @@
     gap: 2rem;
   }
 
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 110;
+  }
+
+  &__cart-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(212, 169, 79, 0.35);
+    border-radius: 12px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 0;
+
+    .nav-cart-icon {
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .nav-cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: $color-gold;
+      color: #120a08;
+      font-size: 0.7rem;
+      font-weight: 800;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #140c0a;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    &:hover {
+      background: rgba(212, 169, 79, 0.2);
+      border-color: $color-gold;
+      transform: translateY(-2px);
+    }
+  }
+
   &__toggle {
     display: none;
     flex-direction: column;

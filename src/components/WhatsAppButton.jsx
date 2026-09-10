@@ -1,6 +1,22 @@
+import { useLocation } from 'react-router-dom';
 import './WhatsAppButton.scss';
 
-export default function WhatsAppButton({ phone = '919000000000', message = 'Hi MI Groups, I would like to enquire about your products.' }) {
+export default function WhatsAppButton() {
+  const location = useLocation();
+  const isCatering = location.pathname.startsWith('/catering');
+  const isOil = location.pathname.startsWith('/cold-press');
+  const isMasala = location.pathname.startsWith('/masala');
+
+  const phone = isCatering ? '919842096814' : '919629533887';
+  const bizName = isCatering
+    ? 'MI Catering Services'
+    : isOil
+    ? 'Aafiya Cold Pressed Oils'
+    : isMasala
+    ? 'Ibrahim Masala Mill'
+    : 'MI Groups';
+
+  const message = `Hi ${bizName}, I would like to enquire about your services & products.`;
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   return (
     <a href={url} target="_blank" rel="noopener noreferrer" className="whatsapp-fab" aria-label="Chat on WhatsApp">

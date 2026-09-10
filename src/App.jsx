@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import WhatsAppButton from './components/WhatsAppButton.jsx';
+import CartDrawer from './components/CartDrawer.jsx';
+import FloatingCartButton from './components/FloatingCartButton.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import SmoothScroll from './components/SmoothScroll.jsx';
 import LogoIntro from './components/LogoIntro.jsx';
+import { CartProvider } from './context/CartContext.jsx';
 
 import Home from './pages/Home.jsx';
 import Catering from './pages/Catering.jsx';
@@ -28,29 +31,34 @@ export default function App() {
   };
 
   return (
-    <SmoothScroll>
-      {!introDone && !isAdminRoute && <LogoIntro onComplete={handleIntroComplete} />}
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catering" element={<Catering />} />
-          <Route path="/masala-mill" element={<MasalaMill />} />
-          <Route path="/cold-press-oil" element={<ColdPressOil />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </SmoothScroll>
+    <CartProvider>
+      <SmoothScroll>
+        {!introDone && !isAdminRoute && <LogoIntro onComplete={handleIntroComplete} />}
+        {!isAdminRoute && <Navbar />}
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/catering" element={<Catering />} />
+            <Route path="/masala-mill" element={<MasalaMill />} />
+            <Route path="/cold-press-oil" element={<ColdPressOil />} />
+            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <WhatsAppButton />}
+        {!isAdminRoute && <FloatingCartButton />}
+        <CartDrawer />
+      </SmoothScroll>
+    </CartProvider>
   );
 }

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import api from '../api/client';
 import RevealText from '../components/RevealText.jsx';
+import miCateringLogo from '../assets/mi-catering-logo.png';
 import './BusinessPage.scss';
 
 export default function Catering() {
@@ -67,12 +68,22 @@ export default function Catering() {
             <span className="fssai-badge__number">XXXXXXXXXXXXXXXX</span>
           </div>
 
+          <div className="business-hero__logo-box">
+            <img
+              src={miCateringLogo}
+              alt="MI Catering Services Logo"
+              className="business-hero__logo"
+            />
+          </div>
+
           <span className="eyebrow">MI Catering Services</span>
           <h1>Authentic Flavors for Every Celebration</h1>
           <p>Weddings, housewarmings, corporate events &amp; daily catering — cooked with care.</p>
           <div className="business-hero__ctas">
             <a href="#quotation" className="btn btn--primary">Get a Quotation</a>
-            <a href="tel:+919000000000" className="btn btn--outline">Call Us</a>
+            <a href="tel:+919842096814" className="btn btn--outline">
+              📞 +91 98420 96814
+            </a>
           </div>
         </div>
       </section>

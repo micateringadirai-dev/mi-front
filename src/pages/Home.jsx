@@ -4,6 +4,8 @@ import Hero3D from '../components/Hero3D.jsx';
 import FloatingCard from '../components/FloatingCard.jsx';
 import RevealText from '../components/RevealText.jsx';
 import HorizontalGallery from '../components/HorizontalGallery.jsx';
+import miCateringLogo from '../assets/mi-catering-logo.png';
+import aafiyaLogo from '../assets/aafiya-logo.png';
 import './Home.scss';
 
 const galleryItems = [
@@ -22,6 +24,7 @@ const businesses = [
     color: '#b5482c',
     to: '/catering',
     img: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800',
+    logo: miCateringLogo,
   },
   {
     key: 'masala',
@@ -33,11 +36,12 @@ const businesses = [
   },
   {
     key: 'oil',
-    name: 'Afia Cold Press Oil',
+    name: 'Aafiya Cold Pressed Oils',
     tagline: 'Pure wood-pressed chekku oils',
     color: '#4f6b3b',
     to: '/cold-press-oil',
     img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=800',
+    logo: aafiyaLogo,
   },
 ];
 
@@ -135,7 +139,13 @@ export default function Home() {
                 <div
                   className="business-card__img"
                   style={{ backgroundImage: `url(${b.img})` }}
-                />
+                >
+                  {b.logo && (
+                    <div className="business-card__logo-badge">
+                      <img src={b.logo} alt={`${b.name} logo`} />
+                    </div>
+                  )}
+                </div>
                 <div className="business-card__body">
                   <h3>{b.name}</h3>
                   <p>{b.tagline}</p>
@@ -163,21 +173,27 @@ export default function Home() {
             <span className="eyebrow">Why MI Groups</span>
             <RevealText as="h2">Quality You Can Taste, Trust You Can Feel</RevealText>
             <p>
-              From FSSAI-certified catering kitchens to traditional wood-pressed oil mills, every
+              From FSSAI-certified catering kitchens to traditional cold pressed oil mills, every
               MI Groups business is run with the same family values — hygiene, honesty, and
               genuine craftsmanship passed down through generations.
             </p>
             <ul className="why__list">
               <li>✔ FSSAI Licensed Catering Operations</li>
               <li>✔ Stone-ground, preservative-free masalas</li>
-              <li>✔ Traditional wood/chekku cold-press extraction</li>
+              <li>✔ Traditional cold-press extraction</li>
               <li>✔ Direct-from-family, no middlemen pricing</li>
+              <li className="why__highlight-red">
+                <span className="highlight-badge">Open Invite</span>
+                <span className="highlight-text">
+                  "You can come directly to mill and check how they are preparing."
+                </span>
+              </li>
             </ul>
           </div>
           <div className="why__stats grid grid--2">
-            <div className="card"><h3>15+</h3><p>Years of Family Trust</p></div>
-            <div className="card"><h3>500+</h3><p>Events Catered</p></div>
-            <div className="card"><h3>50+</h3><p>Masala Varieties</p></div>
+            <div className="card"><h3>10+</h3><p>Years of Family Trust</p></div>
+            <div className="card"><h3>300+</h3><p>Events Catered</p></div>
+            <div className="card"><h3>Best</h3><p>Masala Varieties</p></div>
             <div className="card"><h3>100%</h3><p>Pure Cold-Pressed Oils</p></div>
           </div>
         </div>

@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import api from '../api/client';
 import RevealText from '../components/RevealText.jsx';
+import ProductDetailsModal from '../components/ProductDetailsModal.jsx';
+import { useCart } from '../context/CartContext.jsx';
+import aafiyaLogo from '../assets/aafiya-logo.png';
 import './BusinessPage.scss';
 
 export default function ColdPressOil() {
+  const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
+  const [selectedProductModal, setSelectedProductModal] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     productName: '',
@@ -58,12 +63,22 @@ export default function ColdPressOil() {
     <div className="business-page business-page--oil">
       <section className="business-hero">
         <div className="container">
-          <span className="eyebrow">Afia Cold Press Oil</span>
+          <div className="business-hero__logo-box">
+            <img
+              src={aafiyaLogo}
+              alt="Aafiya Cold Pressed Oils Logo"
+              className="business-hero__logo"
+            />
+          </div>
+
+          <span className="eyebrow">Aafiya Cold Pressed Oils</span>
           <h1>Pure Wood-Pressed Chekku Oils</h1>
           <p>Traditional cold-press extraction — no heat, no chemicals, just pure nutrition.</p>
           <div className="business-hero__ctas">
             <a href="#enquiry" className="btn btn--primary">Enquire Now</a>
-            <a href="tel:+919000000000" className="btn btn--outline">Call Us</a>
+            <a href="tel:+919629533887" className="btn btn--outline">
+              📞 +91 96295 33887
+            </a>
           </div>
         </div>
       </section>
@@ -74,7 +89,7 @@ export default function ColdPressOil() {
             <span className="eyebrow">Our Process</span>
             <RevealText as="h2">The Traditional Chekku Method</RevealText>
             <p>
-              Afia Cold Press Oil is extracted using traditional wood ("chekku") presses that
+              Aafiya Cold Pressed Oils is extracted using traditional wood ("chekku") presses that
               operate at low speed and low temperature, preserving natural nutrients, aroma, and
               flavor — completely free from chemical solvents or refining.
             </p>
@@ -94,19 +109,61 @@ export default function ColdPressOil() {
             <h2>Product Range</h2>
           </div>
           <div className="grid grid--3">
-            {staticProducts.map((p) => (
-              <div className="card product-card" key={p._id}>
-                <div className="product-card__img" style={{ backgroundImage: `url(${p.images?.[0] || 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=600'})` }} />
-                <h3>{p.name}</h3>
-                <p>{p.description}</p>
-                <p className="price-tag">
-                  {p.packageSizes?.map((s) => `${s.size}: ₹${s.price}`).join(' · ')}
-                </p>
-              </div>
-            ))}
+            {staticProducts.map((p) => {
+              const defaultPkg = p.packageSizes?.[0] || { size: '500ml', price: 250 };
+              return (
+                <div className="card product-card" key={p._id}>
+                  <div
+                    className="product-card__img"
+                    style={{
+                      backgroundImage: `url(${p.images?.[0] || 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=600'})`
+                    }}
+                    onClick={() => setSelectedProductModal(p)}
+                  />
+                  <h3 onClick={() => setSelectedProductModal(p)}>{p.name}</h3>
+                  <p className="product-card__desc">{p.description}</p>
+                  <div className="product-card__meta">
+                    <span className="price-tag">₹{defaultPkg.price}</span>
+                    <span className="stock-tag">
+                      {p.packageSizes?.map((s) => s.size).join(' · ')}
+                    </span>
+                  </div>
+                  <div className="product-card__actions">
+                    <button
+                      type="button"
+                      className="btn btn--outline btn--sm btn-view-details"
+                      onClick={() => setSelectedProductModal(p)}
+                    >
+                      👁️ View Details
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn--primary btn--sm btn-add-cart"
+                      onClick={() =>
+                        addToCart(p, 1, {
+                          unit: defaultPkg.size,
+                          price: defaultPkg.price,
+                          business: 'Aafiya Cold Pressed Oils',
+                        })
+                      }
+                    >
+                      🛒 Add to Cart
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
+
+      {/* Product Details Modal */}
+      {selectedProductModal && (
+        <ProductDetailsModal
+          product={selectedProductModal}
+          onClose={() => setSelectedProductModal(null)}
+        />
+      )}
 
       <section id="enquiry" className="section">
         <div className="container">
