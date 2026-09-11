@@ -1,18 +1,48 @@
-// MI Groups brand palette — premium, warm, family-business feel
-$color-charcoal: #150d0b;
+// MI Groups brand palette — premium, warm, family-business luxury feel
+$color-charcoal: #1a1210;
 $color-maroon: #3a0f0f;
-$color-gold: #d4a94f;
-$color-gold-light: #f0d999;
-$color-cream: #fbf3e7;
+$color-maroon-dark: #240909;
+$color-maroon-light: #521818;
+
+// Luxurious gold accents
+$color-gold: #cfa144;
+$color-gold-light: #edd8a3;
+$color-gold-deep: #a87926;
+$color-gold-glow: rgba(207, 161, 68, 0.25);
+$color-border-subtle: rgba(207, 161, 68, 0.22);
+$color-border-light: rgba(74, 58, 48, 0.08);
+
+// Warm silk neutral surfaces
+$color-cream: #fdfbf7;
+$color-bg-base: #fdfbf7;
+$color-bg-subtle: #f6f0e6;
+$color-bg-card: #ffffff;
+$color-text-muted: #6b5a50;
+$color-text-subtle: #8c7a70;
 
 // Business accent themes
 $color-catering: #b5482c; // warm terracotta red
-$color-masala: #d97b1f; // turmeric orange
-$color-oil: #4f6b3b; // cold-press green
+$color-masala: #d97b1f;   // turmeric orange
+$color-oil: #4f6b3b;      // cold-press green
 
+// Typography
 $font-display: 'Cormorant Garamond', serif;
 $font-body: 'Poppins', sans-serif;
 
-$radius-lg: 20px;
+// Radii
+$radius-xl: 26px;
+$radius-lg: 18px;
 $radius-md: 12px;
-$shadow-soft: 0 20px 45px rgba(0, 0, 0, 0.25);
+$radius-sm: 8px;
+$radius-full: 9999px;
+
+// Layered atmospheric shadows (smooth, subtle, no muddy black)
+$shadow-sm: 0 4px 14px -2px rgba(30, 21, 19, 0.05);
+$shadow-soft: 0 12px 32px -4px rgba(30, 21, 19, 0.07), 0 4px 12px -2px rgba(207, 161, 68, 0.04);
+$shadow-hover: 0 20px 42px -6px rgba(30, 21, 19, 0.12), 0 8px 18px rgba(207, 161, 68, 0.1);
+$shadow-glow: 0 0 28px rgba(207, 161, 68, 0.28);
+$shadow-glass: 0 16px 40px rgba(18, 10, 8, 0.35);
+
+// Smooth timing
+$transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);

@@ -109,6 +109,15 @@ export default function MasalaMill() {
             </a>
           </div>
         </div>
+
+        <div className="business-hero__curve" aria-hidden="true">
+          <svg viewBox="0 0 1440 50" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,0 C360,50 1080,50 1440,50 L1440,50 L0,50 Z"
+              fill="#fdfbf7"
+            />
+          </svg>
+        </div>
       </header>
 
       <section className="section">

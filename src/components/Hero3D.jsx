@@ -4,27 +4,27 @@ import { Float, Environment, ContactShadows } from '@react-three/drei';
 import './Hero3D.scss';
 
 // Three floating torus-knots representing the three MI Groups businesses,
-// each tinted in its brand accent color, gently rotating and bobbing.
+// each tinted in its brand accent color with a smooth satin luxury finish.
 function BrandKnot({ position, color, speed = 1, scale = 1 }) {
   const meshRef = useRef();
 
   useFrame((state, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.25 * speed;
-      meshRef.current.rotation.y += delta * 0.35 * speed;
+      meshRef.current.rotation.x += delta * 0.2 * speed;
+      meshRef.current.rotation.y += delta * 0.28 * speed;
     }
   });
 
   return (
-    <Float speed={2 * speed} rotationIntensity={0.6} floatIntensity={1.2}>
+    <Float speed={1.6 * speed} rotationIntensity={0.5} floatIntensity={1.0}>
       <mesh ref={meshRef} position={position} scale={scale}>
-        <torusKnotGeometry args={[1, 0.32, 128, 32]} />
+        <torusKnotGeometry args={[1, 0.3, 128, 32]} />
         <meshStandardMaterial
           color={color}
-          metalness={0.65}
-          roughness={0.25}
+          metalness={0.5}
+          roughness={0.32}
           emissive={color}
-          emissiveIntensity={0.08}
+          emissiveIntensity={0.06}
         />
       </mesh>
     </Float>
@@ -36,24 +36,24 @@ function KnotGroup() {
   const isMobile = size.width < 768;
   const isSmallMobile = size.width < 480;
 
-  // On mobile screens, bring side knots inwards and scale down center knot
-  // so all three knots are visible without covering hero text.
+  // Position knots so they gracefully frame the central headline and CTAs
+  // without obscuring text legibility
   const knots = isSmallMobile
     ? [
-        { position: [-1.25, 1.75, -0.6], color: '#b5482c', speed: 0.8, scale: 0.48 },
-        { position: [0, -0.2, -2.4], color: '#d97b1f', speed: 1, scale: 0.58 },
-        { position: [1.25, 1.75, -0.6], color: '#4f6b3b', speed: 1.2, scale: 0.48 },
+        { position: [-1.35, 1.85, -1.2], color: '#b5482c', speed: 0.8, scale: 0.45 },
+        { position: [0, 0.2, -3.2], color: '#d97b1f', speed: 0.9, scale: 0.52 },
+        { position: [1.35, 1.85, -1.2], color: '#4f6b3b', speed: 1.1, scale: 0.45 },
       ]
     : isMobile
     ? [
-        { position: [-1.9, 1.3, -0.3], color: '#b5482c', speed: 0.8, scale: 0.65 },
-        { position: [0, -0.3, -1.8], color: '#d97b1f', speed: 1, scale: 0.75 },
-        { position: [1.9, 1.3, -0.3], color: '#4f6b3b', speed: 1.2, scale: 0.65 },
+        { position: [-2.1, 1.2, -0.8], color: '#b5482c', speed: 0.8, scale: 0.6 },
+        { position: [0, 0.1, -2.6], color: '#d97b1f', speed: 0.9, scale: 0.68 },
+        { position: [2.1, 1.2, -0.8], color: '#4f6b3b', speed: 1.1, scale: 0.6 },
       ]
     : [
-        { position: [-3.2, 0.6, 0], color: '#b5482c', speed: 0.8, scale: 0.85 },
-        { position: [0, -0.4, -1], color: '#d97b1f', speed: 1, scale: 1 },
-        { position: [3.2, 0.8, 0], color: '#4f6b3b', speed: 1.2, scale: 0.85 },
+        { position: [-3.6, 0.5, -0.4], color: '#b5482c', speed: 0.8, scale: 0.82 },
+        { position: [0, 0.1, -2.5], color: '#d97b1f', speed: 0.9, scale: 0.88 },
+        { position: [3.6, 0.6, -0.4], color: '#4f6b3b', speed: 1.1, scale: 0.82 },
       ];
 
   return (
@@ -68,10 +68,10 @@ function KnotGroup() {
         />
       ))}
       <ContactShadows
-        position={[0, isMobile ? -3 : -2.4, 0]}
-        opacity={0.35}
+        position={[0, isMobile ? -3 : -2.5, 0]}
+        opacity={0.3}
         scale={isMobile ? 8 : 12}
-        blur={2.5}
+        blur={2.8}
       />
       <Environment preset="city" />
     </>
@@ -82,8 +82,8 @@ export default function Hero3D() {
   return (
     <div className="hero3d">
       <Canvas camera={{ position: [0, 0, 9], fov: 45 }} dpr={[1, 1.8]}>
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[5, 5, 5]} intensity={1.2} />
+        <ambientLight intensity={0.6} />
+        <directionalLight position={[5, 5, 5]} intensity={1.1} />
         <Suspense fallback={null}>
           <KnotGroup />
         </Suspense>
@@ -91,4 +91,3 @@ export default function Hero3D() {
     </div>
   );
 }
-

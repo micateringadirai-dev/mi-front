@@ -1,42 +1,122 @@
 @use '../styles/variables' as *;
 
 .horizontal-gallery {
+  position: relative;
+  background: transparent;
+  padding: 0.5rem 0 3.75rem;
   overflow: hidden;
-  background: #fff;
-  padding: 1rem 0 3.5rem;
 
-  &__hint {
-    display: none;
-    text-align: center;
-    font-size: 0.78rem;
-    font-weight: 600;
+  &__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.35rem;
+
+    @media (max-width: 600px) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__tagline {
+    font-size: 0.8rem;
+    font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: $color-gold;
-    margin-bottom: 1.25rem;
+
+    @media (max-width: 600px) {
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.55rem;
+
+    .gallery-nav-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1.5px solid rgba(207, 161, 68, 0.35);
+      color: $color-charcoal;
+      font-size: 1.35rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: $shadow-sm;
+      transition: $transition-fast;
+      padding: 0 0 2px 0;
+
+      &:hover {
+        background: $color-gold;
+        color: #ffffff;
+        border-color: $color-gold;
+        transform: scale(1.08);
+        box-shadow: $shadow-soft;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+    }
+  }
+
+  &__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__track {
     display: flex;
-    gap: 1.5rem;
-    padding: 0 1.5rem;
+    gap: 1.75rem;
     width: max-content;
+    padding: 0 1.5rem;
+    will-change: transform;
+    animation: galleryMarquee 38s linear infinite;
+
+    &.is-paused {
+      animation-play-state: paused;
+    }
+
+    &:hover {
+      animation-play-state: paused;
+    }
+
+    @media (max-width: 768px) {
+      gap: 1.15rem;
+      padding: 0 1.25rem;
+      animation-duration: 28s;
+    }
   }
 
   &__item {
     margin: 0;
-    width: 280px;
+    width: 290px;
     flex-shrink: 0;
-    border-radius: $radius-lg;
+    border-radius: $radius-xl;
     overflow: hidden;
     box-shadow: $shadow-soft;
+    border: 1px solid rgba(207, 161, 68, 0.22);
     position: relative;
+    transition: $transition-smooth;
 
     img {
       width: 100%;
-      height: 380px;
+      height: 390px;
       object-fit: cover;
       display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     figcaption {
@@ -44,50 +124,58 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 1rem;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-      color: #fff;
-      font-size: 0.95rem;
+      padding: 1.5rem 1.25rem 1.15rem;
+      background: linear-gradient(to top, rgba(26, 18, 16, 0.92) 0%, rgba(26, 18, 16, 0.4) 65%, transparent 100%);
+      color: #ffffff;
+      font-size: 1rem;
       font-weight: 600;
-    }
-  }
+      letter-spacing: 0.2px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
 
-  @media (max-width: 768px) {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    padding: 0.5rem 0 2.5rem;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
-    &__hint {
-      display: block;
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: $color-gold;
+        box-shadow: 0 0 8px $color-gold;
+      }
     }
 
-    &__track {
-      padding: 0 1.25rem;
-      gap: 1.1rem;
-    }
-
-    &__item {
-      scroll-snap-align: center;
-      scroll-snap-stop: always;
-      width: 74vw;
-      max-width: 270px;
-      border-radius: $radius-md;
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: $shadow-hover;
+      border-color: rgba(207, 161, 68, 0.45);
 
       img {
-        height: 310px;
+        transform: scale(1.06);
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 250px;
+      border-radius: $radius-lg;
+
+      img {
+        height: 320px;
       }
 
       figcaption {
-        font-size: 0.88rem;
-        padding: 0.85rem;
+        font-size: 0.9rem;
+        padding: 1.25rem 1rem 0.95rem;
       }
     }
   }
 }
 
+@keyframes galleryMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

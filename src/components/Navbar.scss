@@ -7,15 +7,20 @@
   right: 0;
   z-index: 100;
   padding: 1.25rem 0;
-  transition: all 0.35s ease;
+  transition: padding 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   background: transparent;
+  border-bottom: 1px solid transparent;
 
   &--scrolled {
-    background: rgba(20, 12, 10, 0.94);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: 0.75rem 0;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    background: rgba(22, 14, 12, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 0.8rem 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(207, 161, 68, 0.18);
   }
 
   &__inner {
@@ -33,12 +38,17 @@
 
   &__brand {
     font-family: $font-display;
-    font-size: 1.6rem;
+    font-size: 1.65rem;
     font-weight: 700;
     color: $color-cream;
     letter-spacing: 0.5px;
     text-decoration: none;
     z-index: 110;
+    transition: transform 0.25s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
 
     span {
       color: $color-gold;
@@ -51,32 +61,45 @@
     gap: 2rem;
 
     a {
-      color: $color-cream;
+      color: #ede2d6;
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
       position: relative;
-      padding-bottom: 4px;
-      transition: color 0.25s ease;
+      padding: 0.35rem 0.6rem;
+      border-radius: 8px;
+      transition: color 0.25s ease, background 0.25s ease;
 
       &::after {
         content: '';
         position: absolute;
-        left: 0;
-        bottom: 0;
+        left: 50%;
+        bottom: -2px;
         width: 0;
         height: 2px;
-        background: $color-gold;
-        transition: width 0.3s ease;
+        background: linear-gradient(90deg, transparent, $color-gold, transparent);
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        transform: translateX(-50%);
+        border-radius: 2px;
       }
 
-      &:hover::after,
-      &.active::after {
-        width: 100%;
+      &:hover {
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.05);
+
+        &::after {
+          width: 80%;
+        }
       }
 
       &.active {
-        color: $color-gold;
+        color: $color-gold-light;
+        font-weight: 600;
+
+        &::after {
+          width: 80%;
+          background: $color-gold;
+        }
       }
     }
   }
@@ -100,8 +123,8 @@
 
   &__cart-btn {
     position: relative;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(212, 169, 79, 0.35);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(207, 161, 68, 0.3);
     border-radius: 12px;
     width: 44px;
     height: 44px;
@@ -109,8 +132,10 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: $transition-smooth;
     padding: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 
     .nav-cart-icon {
       font-size: 1.35rem;
@@ -121,7 +146,7 @@
       position: absolute;
       top: -5px;
       right: -5px;
-      background: $color-gold;
+      background: linear-gradient(135deg, $color-gold, $color-gold-light);
       color: #120a08;
       font-size: 0.7rem;
       font-weight: 800;
@@ -131,14 +156,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid #140c0a;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      border: 2px solid #1a1210;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
     }
 
     &:hover {
-      background: rgba(212, 169, 79, 0.2);
-      border-color: $color-gold;
+      background: rgba(207, 161, 68, 0.2);
+      border-color: $color-gold-light;
       transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(207, 161, 68, 0.25);
     }
   }
 
@@ -156,7 +182,7 @@
     cursor: pointer;
     z-index: 110;
     padding: 0;
-    transition: all 0.25s ease;
+    transition: $transition-smooth;
 
     span {
       display: block;
@@ -173,7 +199,7 @@
     }
 
     &.is-open {
-      background: rgba(212, 169, 79, 0.15);
+      background: rgba(207, 161, 68, 0.15);
       border-color: $color-gold;
 
       span:nth-child(1) {
@@ -200,14 +226,15 @@
       right: -100%;
       height: 100vh;
       height: 100dvh;
-      width: 80%;
+      width: 82%;
       max-width: 320px;
-      background: linear-gradient(180deg, #1f1411 0%, $color-charcoal 100%);
+      background: linear-gradient(180deg, #241512 0%, #150d0b 100%);
       flex-direction: column;
       justify-content: space-between;
       align-items: stretch;
-      padding: 6rem 1.75rem 2.5rem;
-      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.5);
+      padding: 5.5rem 1.75rem 2.5rem;
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+      border-left: 1px solid rgba(207, 161, 68, 0.15);
       transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 105;
       box-sizing: border-box;
@@ -219,12 +246,12 @@
 
     &__drawer-header {
       display: block;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(207, 161, 68, 0.15);
 
       .navbar__drawer-title {
         font-family: $font-display;
-        font-size: 1.4rem;
+        font-size: 1.45rem;
         font-weight: 700;
         color: $color-cream;
 
@@ -243,10 +270,10 @@
 
       a {
         display: block;
-        padding: 0.75rem 0.5rem;
-        font-size: 1.1rem;
+        padding: 0.8rem 0.75rem;
+        font-size: 1.05rem;
         border-radius: $radius-md;
-        transition: background 0.2s ease, padding-left 0.2s ease;
+        transition: $transition-fast;
 
         &::after {
           display: none;
@@ -254,17 +281,17 @@
 
         &:hover,
         &.active {
-          background: rgba(212, 169, 79, 0.12);
-          color: $color-gold;
-          padding-left: 0.85rem;
+          background: rgba(207, 161, 68, 0.15);
+          color: $color-gold-light;
+          padding-left: 1rem;
         }
       }
     }
 
     &__drawer-footer {
       display: block;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(207, 161, 68, 0.15);
 
       .btn {
         width: 100%;
@@ -281,9 +308,9 @@
 .navbar__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(10, 5, 4, 0.65);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(10, 5, 4, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 99;
   opacity: 0;
   visibility: hidden;
@@ -296,4 +323,3 @@
     pointer-events: auto;
   }
 }
-

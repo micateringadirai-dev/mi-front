@@ -33,7 +33,15 @@ export default function ColdPressOil() {
       .catch((err) => console.warn('Could not load live oil products, using defaults:', err.message));
   }, []);
 
-  const selectedProduct = (Array.isArray(products) ? products : []).find((p) => p.name === form.productName);
+  const staticProducts = Array.isArray(products) && products.length > 0
+    ? products
+    : [
+        { _id: 'sesame', name: 'Sesame Oil (Nallennai)', description: 'Traditional cold-pressed sesame oil.', packageSizes: [{ size: '500ml', price: 250 }, { size: '1L', price: 480 }] },
+        { _id: 'coconut', name: 'Coconut Oil', description: 'Pure cold-pressed coconut oil.', packageSizes: [{ size: '500ml', price: 200 }, { size: '1L', price: 380 }] },
+        { _id: 'groundnut', name: 'Groundnut Oil', description: 'Cold-pressed groundnut oil, rich in flavor.', packageSizes: [{ size: '500ml', price: 220 }, { size: '1L', price: 420 }] },
+      ];
+
+  const selectedProduct = staticProducts.find((p) => p.name === form.productName);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -55,14 +63,6 @@ export default function ColdPressOil() {
     }
   };
 
-  const staticProducts = Array.isArray(products) && products.length > 0
-    ? products
-    : [
-        { _id: 'sesame', name: 'Sesame Oil (Nallennai)', description: 'Traditional wood-pressed sesame oil.', packageSizes: [{ size: '500ml', price: 250 }, { size: '1L', price: 480 }] },
-        { _id: 'coconut', name: 'Coconut Oil', description: 'Pure cold-pressed coconut oil.', packageSizes: [{ size: '500ml', price: 200 }, { size: '1L', price: 380 }] },
-        { _id: 'groundnut', name: 'Groundnut Oil', description: 'Wood-pressed groundnut oil, rich in flavor.', packageSizes: [{ size: '500ml', price: 220 }, { size: '1L', price: 420 }] },
-      ];
-
   return (
     <div className="business-page business-page--oil">
       <section className="business-hero">
@@ -76,7 +76,7 @@ export default function ColdPressOil() {
           </div>
 
           <span className="eyebrow">Aafiya Cold Pressed Oils</span>
-          <h1>Pure Wood-Pressed Chekku Oils</h1>
+          <h1>Pure Chekku Oils</h1>
           <p>Traditional cold-press extraction — no heat, no chemicals, just pure nutrition.</p>
           <div className="business-hero__ctas">
             <a href="#enquiry" className="btn btn--primary">Enquire Now</a>
@@ -85,21 +85,30 @@ export default function ColdPressOil() {
             </a>
           </div>
         </div>
+
+        <div className="business-hero__curve" aria-hidden="true">
+          <svg viewBox="0 0 1440 50" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,0 C360,50 1080,50 1440,50 L1440,50 L0,50 Z"
+              fill="#fdfbf7"
+            />
+          </svg>
+        </div>
       </section>
 
       <section className="section">
         <div className="container grid grid--2">
           <div>
             <span className="eyebrow">Our Process</span>
-            <RevealText as="h2">The Traditional Chekku Method</RevealText>
+            <RevealText as="h2">The Traditional Cold-Pressed Method</RevealText>
             <p>
-              Aafiya Cold Pressed Oils is extracted using traditional wood ("chekku") presses that
+              Aafiya Cold Pressed Oils is extracted using traditional cold presses that
               operate at low speed and low temperature, preserving natural nutrients, aroma, and
               flavor — completely free from chemical solvents or refining.
             </p>
           </div>
           <div className="grid grid--2">
-            {['Wood/Chekku Pressed', 'No Chemicals Used', 'Cold Extraction', 'Lab-Tested Purity'].map((c) => (
+            {['Cold-Pressed Oils', 'No Chemicals Used', 'Cold Extraction', 'Lab-Tested Purity'].map((c) => (
               <div className="card" key={c}><h3>{c}</h3></div>
             ))}
           </div>

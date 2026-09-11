@@ -103,6 +103,15 @@ export default function Catering() {
             </a>
           </div>
         </div>
+
+        <div className="business-hero__curve" aria-hidden="true">
+          <svg viewBox="0 0 1440 50" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,0 C360,50 1080,50 1440,0 L1440,50 L0,50 Z"
+              fill="#fdfbf7"
+            />
+          </svg>
+        </div>
       </section>
 
       <section className="section">
@@ -118,7 +127,7 @@ export default function Catering() {
             </p>
           </div>
           <div className="grid grid--2">
-            {['Weddings', 'Housewarmings', 'Corporate Events', 'Daily Tiffin Service'].map((c) => (
+            {['Weddings', 'Housewarmings', 'Corporate Events', 'Place Your Order We will Take Care of the Rest'].map((c) => (
               <div className="card" key={c}><h3>{c}</h3></div>
             ))}
           </div>

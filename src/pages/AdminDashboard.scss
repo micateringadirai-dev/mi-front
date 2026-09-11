@@ -1048,6 +1048,220 @@
     }
   }
 
+  // ================= OIL PRODUCTS & PACKAGE SIZES =================
+  .pkg-pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+
+    .pkg-pill {
+      font-size: 0.78rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      background: #f1f6ed;
+      color: $color-oil;
+      border: 1px solid rgba($color-oil, 0.2);
+      font-weight: 500;
+
+      strong {
+        font-weight: 700;
+        margin-right: 2px;
+      }
+
+      &--empty {
+        background: #f5f5f5;
+        color: #999;
+        border-color: #eee;
+      }
+    }
+  }
+
+  .stock-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.8rem;
+    color: #666;
+
+    .stock-info-item {
+      strong {
+        color: #2b201a;
+      }
+    }
+  }
+
+  .quick-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.45rem;
+
+    .quick-suggestions-label {
+      font-size: 0.75rem;
+      color: #8c7667;
+      font-weight: 600;
+    }
+
+    .quick-tag {
+      background: #f7f3ee;
+      border: 1px solid #dfd5c5;
+      color: #5c4738;
+      font-size: 0.74rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #efe7dc;
+        border-color: $color-gold;
+        color: $color-maroon;
+      }
+
+      &.active {
+        background: $color-gold;
+        border-color: $color-gold;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .field-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+
+    label {
+      margin-bottom: 0;
+    }
+
+    .preset-sizes {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+
+      .preset-label {
+        font-size: 0.72rem;
+        color: #8c7667;
+        font-weight: 600;
+      }
+
+      .btn-preset-size {
+        background: #f4eee2;
+        border: 1px solid #e0d4be;
+        color: $color-maroon;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.15rem 0.45rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: $color-maroon;
+          color: #fff;
+          border-color: $color-maroon;
+        }
+      }
+    }
+  }
+
+  .package-sizes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: #fcfbf8;
+    border: 1px solid #e8decb;
+    border-radius: 10px;
+    padding: 0.85rem;
+    margin-bottom: 0.6rem;
+
+    .package-size-row {
+      display: grid;
+      grid-template-columns: 1.4fr 1.2fr 1fr 36px;
+      gap: 0.6rem;
+      align-items: flex-end;
+      background: #ffffff;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ece4d7;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+
+      .pkg-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        label {
+          font-size: 0.72rem;
+          font-weight: 600;
+          color: #796659;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 0;
+        }
+
+        input {
+          padding: 0.45rem 0.65rem;
+          font-size: 0.88rem;
+          border: 1px solid #dcd2c3;
+          border-radius: 6px;
+          background: #faf8f5;
+
+          &:focus {
+            outline: none;
+            border-color: $color-gold;
+            background: #fff;
+          }
+        }
+      }
+
+      .pkg-action {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+
+        .btn-remove-pkg {
+          background: #fbeae9;
+          color: #d32f2f;
+          border: 1px solid #f5c6cb;
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          font-weight: bold;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.15s ease;
+
+          &:hover:not(:disabled) {
+            background: #d32f2f;
+            color: #fff;
+          }
+
+          &:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-add-custom-size {
+    align-self: flex-start;
+    font-size: 0.82rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
   // ================= RESPONSIVE =================
   @media (max-width: 992px) {
     flex-direction: column;

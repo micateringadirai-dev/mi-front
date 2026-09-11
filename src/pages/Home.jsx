@@ -37,7 +37,7 @@ const businesses = [
   {
     key: 'oil',
     name: 'Aafiya Cold Pressed Oils',
-    tagline: 'Pure wood-pressed chekku oils',
+    tagline: 'Pure Cold-Pressed Oils',
     color: '#4f6b3b',
     to: '/cold-press-oil',
     img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?q=80&w=800',
@@ -112,6 +112,15 @@ export default function Home() {
             </a>
           </motion.div>
         </div>
+
+        <div className="hero__curve" aria-hidden="true">
+          <svg viewBox="0 0 1440 60" fill="none" preserveAspectRatio="none">
+            <path
+              d="M0,0 C360,60 1080,60 1440,0 L1440,60 L0,60 Z"
+              fill="#fdfbf7"
+            />
+          </svg>
+        </div>
       </section>
 
       <section id="businesses" className="section businesses">
@@ -178,23 +187,39 @@ export default function Home() {
               genuine craftsmanship passed down through generations.
             </p>
             <ul className="why__list">
-              <li>✔ FSSAI Licensed Catering Operations</li>
-              <li>✔ Stone-ground, preservative-free masalas</li>
-              <li>✔ Traditional cold-press extraction</li>
-              <li>✔ Direct-from-family, no middlemen pricing</li>
-              <li className="why__highlight-red">
-                <span className="highlight-badge">Open Invite</span>
-                <span className="highlight-text">
-                  "You can come directly to mill and check how they are preparing."
-                </span>
-              </li>
+              <li><span className="check-icon">✓</span> FSSAI Licensed Catering Operations</li>
+              <li><span className="check-icon">✓</span> Stone-ground, preservative-free masalas</li>
+              <li><span className="check-icon">✓</span> Traditional cold-press extraction</li>
+              <li><span className="check-icon">✓</span> Direct-from-family, no middlemen pricing</li>
             </ul>
+
+            <div className="why__open-invite">
+              <div className="invite-badge">
+                <span className="invite-badge__icon">🏡</span>
+                <span className="invite-badge__label">Open Invite</span>
+              </div>
+              <p className="invite-text">
+                “You’re most welcome to visit us directly and see firsthand how we prepare your order with care, cleanliness, and tradition.”
+              </p>
+            </div>
           </div>
           <div className="why__stats grid grid--2">
-            <div className="card"><h3>10+</h3><p>Years of Family Trust</p></div>
-            <div className="card"><h3>300+</h3><p>Events Catered</p></div>
-            <div className="card"><h3>Best</h3><p>Masala Varieties</p></div>
-            <div className="card"><h3>100%</h3><p>Pure Cold-Pressed Oils</p></div>
+            <div className="card stat-card">
+              <h3 className="stat-card__num">10+</h3>
+              <p className="stat-card__label">Years of Family Trust</p>
+            </div>
+            <div className="card stat-card">
+              <h3 className="stat-card__num">500+</h3>
+              <p className="stat-card__label">Events Catered</p>
+            </div>
+            <div className="card stat-card">
+              <h3 className="stat-card__num">100%</h3>
+              <p className="stat-card__label">Stone-Ground Purity</p>
+            </div>
+            <div className="card stat-card">
+              <h3 className="stat-card__num">Pure</h3>
+              <p className="stat-card__label">Cold-Pressed Oils</p>
+            </div>
           </div>
         </div>
       </section>

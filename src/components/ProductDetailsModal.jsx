@@ -40,7 +40,7 @@ export default function ProductDetailsModal({ product, onClose }) {
     : 'Ibrahim Masala Mill';
 
   const badgeText = isOil
-    ? 'Wood-Pressed (Chekku)'
+    ? 'Cold-Pressed Oils'
     : 'Freshly Stone Ground';
 
   // Pricing calculations
@@ -138,7 +138,7 @@ export default function ProductDetailsModal({ product, onClose }) {
               <p>
                 {product.description ||
                   (isOil
-                    ? 'Extracted using traditional wood (chekku) presses at low speed and temperature. Zero heat, zero chemical solvents, retaining 100% natural aroma, healthy fats, and vitamins.'
+                    ? 'Extracted using traditional cold-press extraction at low speed and temperature. Zero heat, zero chemical solvents, retaining 100% natural aroma, healthy fats, and vitamins.'
                     : 'Stone-ground to perfection using time-honored traditional techniques. Retains authentic natural oils, rich aroma, and authentic spice flavors without any artificial colors or chemical preservatives.')}
               </p>
             </div>
