@@ -1,5 +1,7 @@
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import api from '../api/client';
 import Hero3D from '../components/Hero3D.jsx';
 import FloatingCard from '../components/FloatingCard.jsx';
 import RevealText from '../components/RevealText.jsx';
@@ -46,6 +48,21 @@ const businesses = [
 ];
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [cookingAnnouncements, setCookingAnnouncements] = useState([]);
+
+  useEffect(() => {
+    api
+      .get('/catering/events')
+      .then((res) => {
+        if (Array.isArray(res.data?.data)) {
+          const active = res.data.data.filter((e) => e.eventDate && e.isActive !== false);
+          setCookingAnnouncements(active);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <div className="home">
       <section className="hero">
@@ -140,26 +157,54 @@ export default function Home() {
                 key={b.key}
                 className="business-card"
                 style={{ '--accent': b.color }}
+                onClick={(e) => {
+                  // Only navigate if user did not click directly on an inner anchor or button
+                  if (!e.target.closest('a') && !e.target.closest('button')) {
+                    navigate(b.to);
+                  }
+                }}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, delay: i * 0.12 }}
               >
-                <div
+                <Link
+                  to={b.to}
                   className="business-card__img"
                   style={{ backgroundImage: `url(${b.img})` }}
+                  aria-label={`Open ${b.name}`}
                 >
                   {b.logo && (
                     <div className="business-card__logo-badge">
                       <img src={b.logo} alt={`${b.name} logo`} />
                     </div>
                   )}
-                </div>
+                </Link>
                 <div className="business-card__body">
-                  <h3>{b.name}</h3>
+                  <h3>
+                    <Link to={b.to}>{b.name}</Link>
+                  </h3>
                   <p>{b.tagline}</p>
+                  {b.key === 'catering' && cookingAnnouncements.length > 0 && (
+                    <div className="card-cooking-alert">
+                      <span className="alert-pulse"></span>
+                      <span className="alert-text">
+                        📢 Special Cooking on{' '}
+                        <strong>
+                          {new Date(cookingAnnouncements[0].eventDate).toLocaleDateString('en-IN', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </strong>
+                        : {cookingAnnouncements[0].title}
+                      </span>
+                    </div>
+                  )}
                   <Link to={b.to} className="btn btn--primary">
-                    Learn More →
+                    {b.key === 'catering' && cookingAnnouncements.length > 0
+                      ? 'Pre-Order / Learn More →'
+                      : 'Learn More →'}
                   </Link>
                 </div>
               </motion.div>

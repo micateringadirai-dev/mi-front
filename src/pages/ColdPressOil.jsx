@@ -178,6 +178,72 @@ export default function ColdPressOil() {
         />
       )}
 
+      {/* Why Choose AAFIYA Section */}
+      <section className="section why-aafiya-section">
+        <div className="container">
+          <div className="section-heading text-center">
+            <span className="eyebrow">The Aafiya Standard</span>
+            <RevealText as="h2">Why Choose AAFIYA?</RevealText>
+          </div>
+
+          <div className="why-aafiya-grid">
+            <div className="why-aafiya-card">
+              <div className="why-aafiya-card__icon">🌱</div>
+              <h3>Carefully Selected Ingredients</h3>
+              <p>We select quality seeds and nuts for our cold pressed oils.</p>
+            </div>
+
+            <div className="why-aafiya-card">
+              <div className="why-aafiya-card__icon">🪵</div>
+              <h3>Cold Pressed Process</h3>
+              <p>Our oils are produced using a controlled cold pressing process.</p>
+            </div>
+
+            <div className="why-aafiya-card">
+              <div className="why-aafiya-card__icon">🌿</div>
+              <h3>Natural Aroma &amp; Flavour</h3>
+              <p>Our process is designed to retain the natural character of the ingredients.</p>
+            </div>
+
+            <div className="why-aafiya-card">
+              <div className="why-aafiya-card__icon">✨</div>
+              <h3>Quality Focused</h3>
+              <p>We focus on quality and consistency from processing to packaging.</p>
+            </div>
+          </div>
+
+          {/* Invitation / See For Yourself Banner */}
+          <div className="mill-invitation-banner">
+            <div className="mill-invitation-banner__inner">
+              <div className="mill-invitation-tag">
+                <span>📍 Transparency First</span>
+              </div>
+              <h3 className="mill-invitation-title">
+                Don&apos;t Just Take Our Word For It — Come See For Yourself.
+              </h3>
+              <p className="mill-invitation-desc">
+                Visit our oil mill and witness how AAFIYA Cold Pressed Oils are prepared.
+              </p>
+
+              <div className="mill-invitation-pills">
+                <div className="mill-pill">
+                  <span className="mill-pill__icon">🚫</span>
+                  <span>No Preservatives</span>
+                </div>
+                <div className="mill-pill">
+                  <span className="mill-pill__icon">🧪</span>
+                  <span>No Unnecessary Chemicals</span>
+                </div>
+                <div className="mill-pill mill-pill--accent">
+                  <span className="mill-pill__icon">🌿</span>
+                  <span>Just Carefully Selected Ingredients &amp; Cold Pressed Oil</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="enquiry" className="section">
         <div className="container">
           <div className="section-heading">
