@@ -13,9 +13,19 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: 2fr 0.9fr 1.1fr 1.25fr;
+    gap: 2.25rem;
     padding-bottom: 3rem;
+
+    @media (max-width: 1040px) {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 680px) {
+      grid-template-columns: 1fr;
+      gap: 2.25rem;
+    }
 
     .footer__brand-col {
       p {
@@ -41,15 +51,25 @@
       display: inline-block;
 
       .crest-tag {
-        font-size: 0.73rem;
+        display: inline-block;
+        white-space: nowrap;
+        font-size: 0.72rem;
         font-weight: 600;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
         color: $color-gold-light;
         background: rgba(207, 161, 68, 0.12);
         padding: 0.35rem 0.75rem;
         border-radius: 20px;
         border: 1px solid rgba(207, 161, 68, 0.25);
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+
+        @media (max-width: 420px) {
+          font-size: 0.64rem;
+          padding: 0.3rem 0.5rem;
+          letter-spacing: 0.3px;
+        }
       }
     }
 
@@ -151,9 +171,122 @@
       }
     }
 
-    @media (max-width: 860px) {
-      grid-template-columns: 1fr;
-      gap: 2.25rem;
+    .footer__ad-col {
+      .footer-ad-card {
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(207, 161, 68, 0.22);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        max-width: 300px;
+
+        &:hover {
+          transform: translateY(-3px);
+          border-color: rgba(207, 161, 68, 0.45);
+          box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35), 0 0 20px rgba(207, 161, 68, 0.08);
+
+          .footer-ad-card__img {
+            transform: scale(1.05);
+          }
+        }
+
+        &__img-wrap {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+          background: #0b0706;
+          aspect-ratio: 16 / 9;
+        }
+
+        &__img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 0.4s ease;
+        }
+
+        &__badge {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          background: linear-gradient(135deg, #cfa144, #e8943a);
+          color: #fff;
+          font-size: 0.52rem;
+          font-weight: 700;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          padding: 0.2rem 0.55rem;
+          border-radius: 100px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        &__body {
+          padding: 0.75rem 0.85rem 0.85rem;
+        }
+
+        &__title {
+          font-size: 0.8rem;
+          font-weight: 700;
+          color: #ffffff;
+          margin: 0 0 0.2rem;
+          line-height: 1.3;
+
+          span {
+            background: linear-gradient(90deg, #cfa144, #f4caa1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+          }
+        }
+
+        &__sub {
+          font-size: 0.68rem;
+          color: #bfaea0;
+          margin: 0 0 0.65rem;
+          line-height: 1.35;
+
+          strong {
+            color: $color-gold-light;
+          }
+        }
+
+        &__actions {
+          display: flex;
+          gap: 0.45rem;
+        }
+
+        &__btn {
+          flex: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.35rem;
+          padding: 0.42rem 0.4rem;
+          border-radius: 8px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+
+          &:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+          }
+
+          &--wa {
+            background: linear-gradient(135deg, #25d366, #128c4e);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(37, 211, 102, 0.25);
+          }
+
+          &--ig {
+            background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(221, 42, 123, 0.25);
+          }
+        }
+      }
     }
   }
 

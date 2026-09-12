@@ -1,22 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import adCardImg from '../assets/AD.jpg';
 
 const WHATSAPP_NUMBER = '919942272631'; // no + or spaces
 const INSTAGRAM_URL   = 'https://www.instagram.com/onestepbeyond_osb';
 
 export default function AdPopup() {
-  const [visible, setVisible]   = useState(false);
-  const [mounted, setMounted]   = useState(false);
-  const [leaving, setLeaving]   = useState(false);
+  const [visible, setVisible]     = useState(false);
+  const [mounted, setMounted]     = useState(false);
+  const [leaving, setLeaving]     = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  useEffect(() => {
-    const showTimer = setTimeout(() => {
-      setMounted(true);
-      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
-    }, 3000);
-
-    return () => clearTimeout(showTimer);
-  }, []);
+  const remainingTimeRef = useRef(3500);
+  const timerStartRef    = useRef(null);
+  const hideTimerRef     = useRef(null);
 
   const dismiss = () => {
     setLeaving(true);
@@ -25,6 +21,45 @@ export default function AdPopup() {
       setMounted(false);
     }, 400);
   };
+
+  useEffect(() => {
+    // Show after 1.5s entrance delay
+    const showTimer = setTimeout(() => {
+      setMounted(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+    }, 1500);
+
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  // Auto disappear after 3 seconds of being visible, paused when hovered
+  useEffect(() => {
+    if (!visible || leaving) return;
+
+    if (isHovered) {
+      // Pause timer and save remaining time
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+      if (timerStartRef.current) {
+        const elapsed = Date.now() - timerStartRef.current;
+        remainingTimeRef.current = Math.max(400, remainingTimeRef.current - elapsed);
+      }
+    } else {
+      // Resume or start countdown
+      timerStartRef.current = Date.now();
+      hideTimerRef.current = setTimeout(() => {
+        dismiss();
+      }, remainingTimeRef.current);
+    }
+
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
+  }, [visible, leaving, isHovered]);
 
   if (!mounted) return null;
 
@@ -232,12 +267,46 @@ export default function AdPopup() {
           color: #fff;
           box-shadow: 0 4px 14px rgba(221,42,123,0.3);
         }
+
+        .ad-popup__progress-track {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: rgba(0, 0, 0, 0.08);
+          overflow: hidden;
+          z-index: 10;
+        }
+
+        .ad-popup__progress-bar {
+          height: 100%;
+          width: 100%;
+          background: linear-gradient(90deg, #25d366, #cfa144, #dd2a7b);
+          transform-origin: left;
+          animation: adPopupProgress 3s linear forwards;
+        }
+
+        .ad-popup__progress-bar.is-paused {
+          animation-play-state: paused;
+        }
+
+        @keyframes adPopupProgress {
+          from {
+            transform: scaleX(1);
+          }
+          to {
+            transform: scaleX(0);
+          }
+        }
       `}</style>
 
       <div
         className={`ad-popup${visible ? ' is-visible' : ''}${leaving ? ' is-leaving' : ''}`}
         role="dialog"
         aria-label="Promotional offer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
         {/* Visiting card image */}
         <div className="ad-popup__img-wrap">
@@ -305,6 +374,14 @@ export default function AdPopup() {
               Instagram
             </a>
           </div>
+        </div>
+
+        {/* 3s Auto-dismiss progress countdown */}
+        <div className="ad-popup__progress-track" aria-hidden="true">
+          <div
+            className={`ad-popup__progress-bar${isHovered ? ' is-paused' : ''}`}
+            key={visible ? 'active' : 'inactive'}
+          />
         </div>
       </div>
     </>
