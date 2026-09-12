@@ -101,6 +101,10 @@ export default function PreOrderModal({
                 {[1, 2, 3, 4, 5, 10].map((num) => {
                   const minP = selectedAnnouncement.minPackets || 1;
                   if (num < minP) return null;
+                  // Strip any leading number from portionUnit (e.g. "1 Bucket" → "Bucket")
+                  const rawUnit = portionUnit || 'Packet';
+                  const unitLabel = rawUnit.replace(/^\d+\s*/, '');
+                  const label = num === 1 ? unitLabel : `${unitLabel}s`;
                   return (
                     <button
                       key={num}
@@ -108,7 +112,7 @@ export default function PreOrderModal({
                       className={`btn-packet-chip ${preOrderQty === num ? 'is-active' : ''}`}
                       onClick={() => setPreOrderQty(num)}
                     >
-                      {num} {num === 1 ? (portionUnit || 'Packet') : `${portionUnit || 'Packet'}s`}
+                      {num} {label}
                     </button>
                   );
                 })}
@@ -146,7 +150,7 @@ export default function PreOrderModal({
                     className="packet-qty-input"
                     title="Enter exact number of packets"
                   />
-                  <span className="packet-sublabel">{portionUnit || 'Packets'}</span>
+                  <span className="packet-sublabel">{(portionUnit || 'Packets').replace(/^\d+\s*/, '')}</span>
                 </div>
                 <button
                   type="button"
@@ -160,7 +164,7 @@ export default function PreOrderModal({
 
               <div className="packet-price-summary-tag">
                 <span className="formula">
-                  ₹{unitPrice} × {preOrderQty} {portionUnit || 'Packet'}{preOrderQty > 1 ? 's' : ''}
+                  ₹{unitPrice} × {preOrderQty} {(portionUnit || 'Packet').replace(/^\d+\s*/, '')}{preOrderQty > 1 ? 's' : ''}
                 </span>
                 <strong className="amount">
                   = ₹{mainDishSubtotal.toLocaleString('en-IN')}

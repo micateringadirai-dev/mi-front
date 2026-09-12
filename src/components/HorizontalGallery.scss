@@ -30,50 +30,14 @@
     }
   }
 
-  &__nav {
-    display: flex;
-    gap: 0.55rem;
-
-    .gallery-nav-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #ffffff;
-      border: 1.5px solid rgba(207, 161, 68, 0.35);
-      color: $color-charcoal;
-      font-size: 1.35rem;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: $shadow-sm;
-      transition: $transition-fast;
-      padding: 0 0 2px 0;
-
-      &:hover {
-        background: $color-gold;
-        color: #ffffff;
-        border-color: $color-gold;
-        transform: scale(1.08);
-        box-shadow: $shadow-soft;
-      }
-
-      &:active {
-        transform: scale(0.95);
-      }
-    }
-  }
-
+  /* No overflow scrollbar — animation handles all movement */
   &__viewport {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden;
     width: 100%;
+    cursor: grab;
 
-    &::-webkit-scrollbar {
-      display: none;
+    &:active {
+      cursor: grabbing;
     }
   }
 
@@ -83,13 +47,15 @@
     width: max-content;
     padding: 0 1.5rem;
     will-change: transform;
-    animation: galleryMarquee 38s linear infinite;
+
+    /*
+      Items are tripled → full set = 1/3 of total width.
+      Animating from 0 → -33.333% loops back to the exact start of set 2
+      which is visually identical, giving a seamless infinite loop.
+    */
+    animation: galleryMarquee 40s linear infinite;
 
     &.is-paused {
-      animation-play-state: paused;
-    }
-
-    &:hover {
       animation-play-state: paused;
     }
 
@@ -142,6 +108,7 @@
         border-radius: 50%;
         background: $color-gold;
         box-shadow: 0 0 8px $color-gold;
+        flex-shrink: 0;
       }
     }
 
@@ -171,11 +138,13 @@
   }
 }
 
+/*
+  Infinite marquee keyframe.
+  33.333...% = exactly one copy of the original items (out of 3 copies).
+  When translateX reaches -33.333%, the position is visually identical to 0%,
+  so the browser loops it with zero perceptible jump.
+*/
 @keyframes galleryMarquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.3334%); }
 }

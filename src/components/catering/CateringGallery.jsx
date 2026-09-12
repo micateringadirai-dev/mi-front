@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import api from '../../api/client';
 
 /* ─────────────────────────────────────────
@@ -292,7 +292,7 @@ export default function CateringGallery() {
         .pg-desc {
           font-family: 'Inter', sans-serif; font-size: .7rem; color: rgba(255,255,255,.48);
           margin: 0; line-height: 1.45;
-          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+          display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
         .pg-ring {

@@ -77,6 +77,13 @@ export default function OverviewPanel({ summary, onSelectTab }) {
             <button
               type="button"
               className="btn btn--outline btn--sm"
+              onClick={() => onSelectTab('Grinding Services')}
+            >
+              ⚙️ Grinding Rate Card
+            </button>
+            <button
+              type="button"
+              className="btn btn--outline btn--sm"
               onClick={() => onSelectTab('Oil Products')}
             >
               🫒 Manage Oil Products

@@ -9,6 +9,7 @@ import CateringOrdersPanel from '../components/admin/CateringOrdersPanel.jsx';
 import CateringGalleryPanel from '../components/admin/CateringGalleryPanel.jsx';
 import EnquiryPanel from '../components/admin/EnquiryPanel.jsx';
 import MasalaProductsPanel from '../components/admin/MasalaProductsPanel.jsx';
+import GrindingServicesPanel from '../components/admin/GrindingServicesPanel.jsx';
 import OilProductsPanel from '../components/admin/OilProductsPanel.jsx';
 import './AdminDashboard.scss';
 
@@ -18,6 +19,7 @@ const TABS = [
   { id: 'Catering Orders', label: 'Catering Orders', icon: '🍽️' },
   { id: 'Catering Gallery', label: 'Catering Gallery', icon: '🍛' },
   { id: 'Masala Products', label: 'Masala Products', icon: '🧂' },
+  { id: 'Grinding Services', label: 'Grinding Rate Card', icon: '⚙️' },
   { id: 'Masala Enquiries', label: 'Masala Enquiries', icon: '🌶️' },
   { id: 'Oil Products', label: 'Oil Products', icon: '🫒' },
   { id: 'Oil Enquiries', label: 'Oil Enquiries', icon: '📋' },
@@ -59,6 +61,7 @@ export default function AdminDashboard() {
           {tab === 'Catering Orders' && <CateringOrdersPanel />}
           {tab === 'Catering Gallery' && <CateringGalleryPanel />}
           {tab === 'Masala Products' && <MasalaProductsPanel />}
+          {tab === 'Grinding Services' && <GrindingServicesPanel />}
           {tab === 'Masala Enquiries' && <EnquiryPanel resource="masala" itemLabel="Product" />}
           {tab === 'Oil Products' && <OilProductsPanel />}
           {tab === 'Oil Enquiries' && <EnquiryPanel resource="oil" itemLabel="Product" />}
