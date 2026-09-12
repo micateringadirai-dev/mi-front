@@ -69,15 +69,15 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-bottom: 1.35rem;
-          height: 160px;
+          margin-bottom: 1.5rem;
+          height: 195px;
         }
 
         /* Outer radiating ring */
         .ch-ring {
           position: absolute;
           top: 50%; left: 50%;
-          width: 140px; height: 140px;
+          width: 170px; height: 170px;
           border-radius: 50%;
           border: 2.5px solid rgba(207,161,68,0.75);
           pointer-events: none;
@@ -94,7 +94,7 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
         .ch-glow {
           position: absolute;
           top: 50%; left: 50%;
-          width: 170px; height: 170px;
+          width: 200px; height: 200px;
           border-radius: 50%;
           background: radial-gradient(circle, rgba(207,161,68,0.55) 0%, transparent 70%);
           pointer-events: none;
@@ -109,8 +109,8 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
         .ch-logo {
           position: relative;
           z-index: 2;
-          max-height: 140px;
-          max-width: min(90vw, 320px);
+          max-height: 180px;
+          max-width: min(90vw, 360px);
           width: auto;
           object-fit: contain;
           opacity: 0;
@@ -130,12 +130,12 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
         }
 
         @media (max-width: 768px) {
-          .ch-logo-stage { height: 125px; }
-          .ch-logo.is-visible { max-height: 110px; }
+          .ch-logo-stage { height: 155px; }
+          .ch-logo.is-visible { max-height: 140px; }
         }
         @media (max-width: 480px) {
-          .ch-logo-stage { height: 100px; }
-          .ch-logo.is-visible { max-height: 85px; }
+          .ch-logo-stage { height: 125px; }
+          .ch-logo.is-visible { max-height: 110px; }
         }
       `}</style>
 

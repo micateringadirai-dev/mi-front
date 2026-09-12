@@ -159,7 +159,7 @@ export default function ColdPressOil() {
         .oil-ripple {
           position: absolute;
           top: 50%; left: 50%;
-          width: 140px; height: 50px;
+          width: 180px; height: 65px;
           border-radius: 50%;
           border: 2px solid rgba(180,140,30,0.7);
           opacity: 0;
@@ -178,13 +178,13 @@ export default function ColdPressOil() {
           display: flex;
           justify-content: center;
           align-items: center;
-          margin-bottom: 1.35rem;
-          height: 160px;
+          margin-bottom: 1.5rem;
+          height: 195px;
         }
         .oil-hero-logo {
           position: relative; z-index: 2;
-          max-height: 140px;
-          max-width: min(90vw, 300px);
+          max-height: 180px;
+          max-width: min(90vw, 360px);
           width: auto; object-fit: contain;
           opacity: 0;
         }
@@ -199,12 +199,12 @@ export default function ColdPressOil() {
           animation: oil-text-up 0.75s cubic-bezier(0.22,1,0.36,1) forwards;
         }
         @media (max-width: 768px) {
-          .oil-logo-stage { height: 125px; }
-          .oil-hero-logo.is-visible { max-height: 110px; }
+          .oil-logo-stage { height: 155px; }
+          .oil-hero-logo.is-visible { max-height: 140px; }
         }
         @media (max-width: 480px) {
-          .oil-logo-stage { height: 100px; }
-          .oil-hero-logo.is-visible { max-height: 85px; }
+          .oil-logo-stage { height: 125px; }
+          .oil-hero-logo.is-visible { max-height: 110px; }
         }
       `}</style>
 

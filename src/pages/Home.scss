@@ -187,17 +187,18 @@
         transition: background 0.3s ease;
 
         img {
-          width: 72%;
-          max-width: 180px;
+          width: 82%;
+          max-width: 200px;
+          max-height: 170px;
           height: auto;
           object-fit: contain;
-          border-radius: 16px;
-          filter: drop-shadow(0 6px 24px rgba(0,0,0,0.35));
+          border-radius: 18px;
+          filter: drop-shadow(0 8px 28px rgba(0, 0, 0, 0.45));
           transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         &:hover img {
-          transform: scale(1.06);
+          transform: scale(1.08);
         }
       }
     }

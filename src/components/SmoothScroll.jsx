@@ -25,6 +25,7 @@ export default function SmoothScroll({ children }) {
       touchMultiplier: 1.2,
     });
     lenisRef.current = lenis;
+    window.__lenis = lenis;
 
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -59,6 +60,7 @@ export default function SmoothScroll({ children }) {
       lenis.destroy();
       gsap.ticker.remove(tickerCallback);
       lenisRef.current = null;
+      window.__lenis = null;
     };
   }, [isAdmin]);
 

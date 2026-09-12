@@ -7,6 +7,7 @@ import FloatingCard from '../components/FloatingCard.jsx';
 import RevealText from '../components/RevealText.jsx';
 import HorizontalGallery from '../components/HorizontalGallery.jsx';
 import miCateringLogo from '../assets/mi-catering-logo.png';
+import ibrahimLogo from '../assets/ibrahim-logo.png';
 import aafiyaLogo from '../assets/aafiya-logo.png';
 import './Home.scss';
 
@@ -35,6 +36,7 @@ const businesses = [
     color: '#d97b1f',
     to: '/masala-mill',
     img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800',
+    logo: ibrahimLogo,
   },
   {
     key: 'oil',

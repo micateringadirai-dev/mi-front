@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import adCardImg from '../assets/AD.jpg';
 
 const WHATSAPP_NUMBER = '919942272631'; // no + or spaces
 const INSTAGRAM_URL   = 'https://www.instagram.com/onestepbeyond_osb';
@@ -240,7 +241,16 @@ export default function AdPopup() {
       >
         {/* Visiting card image */}
         <div className="ad-popup__img-wrap">
-          <img src="/AD.jpg" alt="MI Groups – Visiting Card" className="ad-popup__img" />
+          <img
+            src={adCardImg}
+            alt="MI Groups – Visiting Card"
+            className="ad-popup__img"
+            onError={(e) => {
+              if (!e.currentTarget.src.endsWith('/AD.jpg')) {
+                e.currentTarget.src = '/AD.jpg';
+              }
+            }}
+          />
           <span className="ad-popup__badge">✦ Connect With Us</span>
           <button
             className="ad-popup__close"

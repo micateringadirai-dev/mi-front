@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import aafiyaLogo from '../assets/aafiya-logo.png';
+import ibrahimLogo from '../assets/ibrahim-logo.png';
 import './ProductDetailsModal.scss';
 
 export default function ProductDetailsModal({ product, onClose }) {
@@ -118,7 +119,7 @@ export default function ProductDetailsModal({ product, onClose }) {
           {/* Details Column */}
           <div className="product-modal-info" data-lenis-prevent="true">
             <div className="product-brand-line">
-              {isOil && <img src={aafiyaLogo} alt="Aafiya" className="brand-crest" />}
+              <img src={isOil ? aafiyaLogo : ibrahimLogo} alt={brandName} className="brand-crest" />
               <span className="product-brand">{brandName}</span>
             </div>
             <h2 className="product-title">{product.name}</h2>
