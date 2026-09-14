@@ -8,7 +8,6 @@ import FloatingCartButton from './components/FloatingCartButton.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import SmoothScroll from './components/SmoothScroll.jsx';
 import LogoIntro from './components/LogoIntro.jsx';
-import AdPopup from './components/AdPopup.jsx';
 import { CartProvider } from './context/CartContext.jsx';
 
 import Home from './pages/Home.jsx';
@@ -58,7 +57,6 @@ export default function App() {
         {!isAdminRoute && <Footer />}
         {!isAdminRoute && <WhatsAppButton />}
         {!isAdminRoute && <FloatingCartButton />}
-        {!isAdminRoute && <AdPopup />}
         <CartDrawer />
       </SmoothScroll>
     </CartProvider>
