@@ -354,11 +354,6 @@ export default function MasalaMill() {
 
   return (
     <div className="business-page business-page--masala">
-      <div className="fssai-badge">
-        <span className="fssai-badge__label">FSSAI Registered</span>
-        <span className="fssai-badge__number">Lic. # 12423008000456</span>
-      </div>
-
       {/* ── Idea A: Grinding Stone Spin Hero ── */}
       <style>{`
         @keyframes stone-spin-decelerate {
@@ -629,6 +624,10 @@ export default function MasalaMill() {
 
       <header className="business-hero">
         <div className="container">
+          <div className="fssai-badge">
+            <span className="fssai-badge__label">FSSAI Registered</span>
+            <span className="fssai-badge__number">Lic. # 12423008000456</span>
+          </div>
           <StoneGrindHero logo={ibrahimLogo} />
         </div>
 

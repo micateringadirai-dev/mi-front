@@ -144,7 +144,7 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
           {/* FSSAI license badge */}
           <div className="fssai-badge">
             <span className="fssai-badge__label">FSSAI Lic. No.</span>
-            <span className="fssai-badge__number">XXXXXXXXXXXXXXXX</span>
+            <span className="fssai-badge__number">22426460000049</span>
           </div>
 
           {/* ── Cinematic logo reveal stage ── */}
