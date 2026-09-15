@@ -624,10 +624,10 @@ export default function MasalaMill() {
 
       <header className="business-hero">
         <div className="container">
-          <div className="fssai-badge">
+          {/* <div className="fssai-badge">
             <span className="fssai-badge__label">FSSAI Registered</span>
-            <span className="fssai-badge__number">Lic. # 12423008000456</span>
-          </div>
+            <span className="fssai-badge__number">Lic. #XXXXXXXXXX</span>
+          </div> */}
           <StoneGrindHero logo={ibrahimLogo} />
         </div>
 
@@ -804,8 +804,8 @@ export default function MasalaMill() {
                   <div className="calc-quantity-wrapper">
                     <input
                       type="number"
-                      step="0.5"
-                      min={selectedGrindSpice?.minQuantityKg || 0.5}
+                      step="any"
+                      min={selectedGrindSpice?.minQuantityKg || 0}
                       value={calcKg}
                       onChange={(e) => setCalcKg(e.target.value)}
                       className="calc-input"
@@ -991,7 +991,7 @@ export default function MasalaMill() {
             <div className="grid grid--2">
               <div className="form-field">
                 <label>Quantity Required (kg) *</label>
-                <input type="number" min="0.5" step="0.5" name="quantityKg" value={form.quantityKg} onChange={handleChange} required />
+                <input type="number" min="0.1" step="any" name="quantityKg" value={form.quantityKg} onChange={handleChange} required />
               </div>
               <div className="form-field">
                 <label>Phone Number *</label>

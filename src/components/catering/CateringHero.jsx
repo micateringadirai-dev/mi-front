@@ -179,13 +179,27 @@ export default function CateringHero({ cookingAnnouncements, onSelectAnnouncemen
                 <button
                   type="button"
                   className="btn btn--primary btn--hero-preorder"
-                  onClick={() => onSelectAnnouncement(cookingAnnouncements[0], true)}
+                  onClick={() => {
+                    const el = document.getElementById('cooking-announcements') || document.getElementById('special-event');
+                    if (el) {
+                      if (window.__lenis) {
+                        window.__lenis.scrollTo(el, { offset: -75, duration: 1.2 });
+                      } else {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }
+                    onSelectAnnouncement(cookingAnnouncements[0], true);
+                  }}
+                  title="Touch to open Special Event section"
                 >
-                  🔥 Pre-Order Daily Special ({cookingAnnouncements.length})
+                  🔥 Pre-Order Special Event: {cookingAnnouncements[0].title}
                 </button>
               )}
               <a href="#quotation" className="btn btn--primary">
                 📋 Request Quotation
+              </a>
+              <a href="#location" className="btn btn--outline">
+                📍 Kitchen Location
               </a>
               <a href="tel:+919842096814" className="btn btn--outline">
                 📞 +91 98420 96814

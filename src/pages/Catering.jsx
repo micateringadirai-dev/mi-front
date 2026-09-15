@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../api/client';
 import CateringHero from '../components/catering/CateringHero.jsx';
@@ -7,6 +8,7 @@ import CookingAnnouncements from '../components/catering/CookingAnnouncements.js
 import CateringGallery from '../components/catering/CateringGallery.jsx';
 import CateringAbout from '../components/catering/CateringAbout.jsx';
 import CateringQuotationForm from '../components/catering/CateringQuotationForm.jsx';
+import CateringLocation from '../components/catering/CateringLocation.jsx';
 import PreOrderModal from '../components/catering/PreOrderModal.jsx';
 import './BusinessPage.scss';
 
@@ -20,6 +22,7 @@ const defaultPackages = [
 ];
 
 export default function Catering() {
+  const location = useLocation();
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
@@ -31,6 +34,7 @@ export default function Catering() {
   // Currently selected announcement for the Dynamic Pre-Order section / popup modal
   const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
   const [isPreOrderModalOpen, setIsPreOrderModalOpen] = useState(false);
+  const hasAutoOpenedRef = useRef(false);
 
   // Pre-Order interactive state
   const [preOrderQty, setPreOrderQty] = useState(1);
@@ -76,6 +80,48 @@ export default function Catering() {
       .finally(() => setLoadingEvents(false));
   }, []);
 
+  // Smoothly scroll to Special Event section if arrived via #cooking-announcements or #special-event
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash === '#cooking-announcements' || hash === '#special-event') {
+      const scrollToSection = () => {
+        const el = document.getElementById('cooking-announcements') || document.getElementById('special-event');
+        if (el) {
+          if (window.__lenis) {
+            window.__lenis.scrollTo(el, {
+              offset: -75,
+              duration: 1.2,
+            });
+          } else {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+          return true;
+        }
+        return false;
+      };
+
+      if (!scrollToSection()) {
+        const t1 = setTimeout(scrollToSection, 250);
+        const t2 = setTimeout(scrollToSection, 600);
+        return () => {
+          clearTimeout(t1);
+          clearTimeout(t2);
+        };
+      }
+    }
+  }, [location.hash, loadingEvents]);
+
+  // Pre-select announcement to highlight it when visiting via special event hash
+  useEffect(() => {
+    if (
+      (location.hash === '#cooking-announcements' || location.hash === '#special-event') &&
+      cookingAnnouncements.length > 0 &&
+      !selectedAnnouncement
+    ) {
+      setSelectedAnnouncement(cookingAnnouncements[0]);
+    }
+  }, [location.hash, cookingAnnouncements, selectedAnnouncement]);
+
   const handleSelectAnnouncement = (ann, openModal = true) => {
     setSelectedAnnouncement(ann);
     setPreOrderExtras({});
@@ -93,20 +139,36 @@ export default function Catering() {
       deliveryType: targetDelivery,
     }));
     toast.success(
-      `Selected "${ann.title}" for ${
-        ann.eventDate
-          ? new Date(ann.eventDate).toLocaleDateString('en-IN', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-            })
-          : 'cooking day'
+      `Selected "${ann.title}" for ${ann.eventDate
+        ? new Date(ann.eventDate).toLocaleDateString('en-IN', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        })
+        : 'cooking day'
       }!`
     );
     if (openModal) {
       setIsPreOrderModalOpen(true);
     }
   };
+
+  // Automatically open the pre-order modal if the user arrived with pre-order intent
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const shouldOpenPreOrder =
+      location.state?.openPreOrder ||
+      searchParams.get('preorder') === 'true' ||
+      location.hash === '#preorder';
+
+    if (shouldOpenPreOrder && cookingAnnouncements.length > 0 && !hasAutoOpenedRef.current) {
+      hasAutoOpenedRef.current = true;
+      const timer = setTimeout(() => {
+        handleSelectAnnouncement(cookingAnnouncements[0], true);
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [location.search, location.state, location.hash, cookingAnnouncements]);
 
   const handleToggleSelectAnnouncement = (ann) => {
     if (selectedAnnouncement?._id === ann._id) {
@@ -217,8 +279,8 @@ export default function Catering() {
     try {
       const formattedAddress =
         preOrderForm.deliveryType === 'Self Service' &&
-        (!preOrderForm.address || !preOrderForm.address.trim())
-          ? 'Self Service / Kitchen Pickup (MI Catering Central Kitchen, Adirampattinam)'
+          (!preOrderForm.address || !preOrderForm.address.trim())
+          ? 'Self Service / Kitchen Pickup (M I CATERING SERVICE, KALLUKOLLAI, Adirampattinam - 614701)'
           : preOrderForm.address.trim();
 
       const payload = {
@@ -302,8 +364,8 @@ export default function Catering() {
 
       const formattedAddress =
         quotationForm.deliveryType === 'Self Service' &&
-        (!quotationForm.address || !quotationForm.address.trim())
-          ? 'Self Service / Kitchen Pickup (MI Catering Central Kitchen, Adirampattinam)'
+          (!quotationForm.address || !quotationForm.address.trim())
+          ? 'Self Service / Kitchen Pickup (M I CATERING SERVICE, KALLUKOLLAI, Adirampattinam - 614701)'
           : quotationForm.address.trim();
 
       const payload = {
@@ -388,6 +450,8 @@ export default function Catering() {
         onSubmitQuotation={handleQuotationSubmit}
         onResetQuotation={handleResetQuotation}
       />
+
+      <CateringLocation />
 
       <PreOrderModal
         isOpen={isPreOrderModalOpen}

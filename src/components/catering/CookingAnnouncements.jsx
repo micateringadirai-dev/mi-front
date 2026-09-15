@@ -9,10 +9,11 @@ export default function CookingAnnouncements({
 }) {
   return (
     <section id="cooking-announcements" className="section cooking-announcements-section">
+      <span id="special-event" style={{ position: 'relative', top: '-90px', display: 'block' }} aria-hidden="true" />
       <div className="container">
         <div className="section-heading">
-          <span className="eyebrow">📢 Special Cooking Days</span>
-          <RevealText as="h2">Scheduled Feasts &amp; Pre-Orders</RevealText>
+          <span className="eyebrow">📢 Special Events &amp; Cooking Days</span>
+          <RevealText as="h2">Scheduled Feasts &amp; Ongoing Pre-Orders</RevealText>
           <p>
             On announced dates, our traditional kitchen prepares special signature feasts. Pre-order
             your packets in advance before cooking starts!
@@ -60,7 +61,7 @@ export default function CookingAnnouncements({
 
                   <div className="announcement-card__body">
                     <span className="announcement-category">
-                      {ann.category ? ann.category.replace('-', ' ') : 'Special Cooking'}
+                      {ann.category ? ann.category.replace('-', ' ') : 'Special Event'}
                     </span>
                     <h3 className="announcement-title">{ann.title}</h3>
                     {ann.description && (

@@ -153,11 +153,21 @@ export default function CateringQuotationForm({
                   />
                 </div>
               ) : (
-                <div className="selfservice-kitchen-box" style={{ marginBottom: '1rem' }}>
+                <div className="selfservice-kitchen-box">
                   <div className="kitchen-pin-icon">📍</div>
                   <div className="kitchen-details">
-                    <strong>MI Catering Central Kitchen</strong>
-                    <p>Main Road, Adirampattinam, Tamil Nadu 614701</p>
+                    <strong>M I CATERING SERVICE (Pickup Counter)</strong>
+                    <p>KALLUKOLLAI, Adirampattinam, Tamil Nadu 614701</p>
+                    <div className="kitchen-actions-row">
+                      <a
+                        href="https://www.google.com/maps/dir//M+I+CATERING+SERVICE+-+ADIRAMPATTINAM,+KALLUKOLLAI,+Adirampattinam,+Tamil+Nadu+614701/@10.3417539,79.3690824,3427m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x3b0003e6ec626489:0xd2bfb2e7528a21a3!2m2!1d79.3752531!2d10.3475511?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="kitchen-directions-btn"
+                      >
+                        <span>🗺️</span> View on Google Maps &rarr;
+                      </a>
+                    </div>
                   </div>
                 </div>
               )}

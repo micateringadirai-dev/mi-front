@@ -11,7 +11,7 @@ export default function WhatsAppButton() {
   const bizName = isCatering
     ? 'MI Catering Services'
     : isOil
-    ? 'Aafiya Cold Pressed Oils'
+    ? 'Afiyah Cold Pressed Oils'
     : isMasala
     ? 'Ibrahim Masala Mill'
     : 'MI Groups';

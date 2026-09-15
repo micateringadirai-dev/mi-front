@@ -32,14 +32,14 @@ function OilDropHero({ logo }) {
         {/* Logo rises from splash */}
         <img
           src={logo}
-          alt="Aafiya Cold Pressed Oils Logo"
+          alt="Afiyah Cold Pressed Oils Logo"
           className={`oil-hero-logo${phase >= 2 ? ' is-visible' : ''}`}
         />
       </div>
 
       {/* Text block */}
       <div className={`oil-hero-text${phase >= 3 ? ' is-visible' : ''}`}>
-        <span className="eyebrow">Aafiya Cold Pressed Oils</span>
+        <span className="eyebrow">Afiyah Cold Pressed Oils</span>
         <h1>Pure Chekku Oils</h1>
         <p>Traditional cold-press extraction — no heat, no chemicals, just pure nutrition.</p>
         <div className="business-hero__ctas">
@@ -210,6 +210,12 @@ export default function ColdPressOil() {
 
       <section className="business-hero">
         <div className="container">
+          {/* FSSAI license badge */}
+          <div className="fssai-badge">
+            <span className="fssai-badge__label">FSSAI Lic. No.</span>
+            <span className="fssai-badge__number">22422460000242</span>
+          </div>
+
           <OilDropHero logo={aafiyaLogo} />
         </div>
 
@@ -226,7 +232,7 @@ export default function ColdPressOil() {
             <span className="eyebrow">Our Process</span>
             <RevealText as="h2">The Traditional Cold-Pressed Method</RevealText>
             <p>
-              Aafiya Cold Pressed Oils is extracted using traditional cold presses that
+              Afiyah Cold Pressed Oils is extracted using traditional cold presses that
               operate at low speed and low temperature, preserving natural nutrients, aroma, and
               flavor — completely free from chemical solvents or refining.
             </p>
@@ -280,7 +286,7 @@ export default function ColdPressOil() {
                         addToCart(p, 1, {
                           unit: defaultPkg.size,
                           price: defaultPkg.price,
-                          business: 'Aafiya Cold Pressed Oils',
+                          business: 'Afiyah Cold Pressed Oils',
                         })
                       }
                     >
@@ -306,8 +312,8 @@ export default function ColdPressOil() {
       <section className="section why-aafiya-section">
         <div className="container">
           <div className="section-heading text-center">
-            <span className="eyebrow">The Aafiya Standard</span>
-            <RevealText as="h2">Why Choose AAFIYA?</RevealText>
+            <span className="eyebrow">The Afiyah Standard</span>
+            <RevealText as="h2">Why Choose Afiyah?</RevealText>
           </div>
 
           <div className="why-aafiya-grid">
@@ -346,7 +352,7 @@ export default function ColdPressOil() {
                 Don&apos;t Just Take Our Word For It — Come See For Yourself.
               </h3>
               <p className="mill-invitation-desc">
-                Visit our oil mill and witness how AAFIYA Cold Pressed Oils are prepared.
+                Visit our oil mill and witness how Afiyah Cold Pressed Oils are prepared.
               </p>
 
               <div className="mill-invitation-pills">
@@ -361,6 +367,10 @@ export default function ColdPressOil() {
                 <div className="mill-pill mill-pill--accent">
                   <span className="mill-pill__icon">🌿</span>
                   <span>Just Carefully Selected Ingredients &amp; Cold Pressed Oil</span>
+                </div>
+                <div className="mill-pill">
+                  <span className="mill-pill__icon">📜</span>
+                  <span>FSSAI Lic. No. 22422460000242</span>
                 </div>
               </div>
             </div>

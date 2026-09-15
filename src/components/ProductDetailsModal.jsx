@@ -37,7 +37,7 @@ export default function ProductDetailsModal({ product, onClose }) {
       : 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800');
 
   const brandName = isOil
-    ? 'Aafiya Cold Pressed Oils'
+    ? 'Afiyah Cold Pressed Oils'
     : 'Ibrahim Masala Mill';
 
   const badgeText = isOil

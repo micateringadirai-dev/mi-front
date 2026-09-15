@@ -40,7 +40,7 @@ const businesses = [
   },
   {
     key: 'oil',
-    name: 'Aafiya Cold Pressed Oils',
+    name: 'Afiyah Cold Pressed Oils',
     tagline: 'Pure Cold-Pressed Oils',
     color: '#4f6b3b',
     to: '/cold-press-oil',
@@ -77,13 +77,37 @@ export default function Home() {
           delay={0.9}
           style={{ top: '22%', left: '6%' }}
         />
-        <FloatingCard
-          icon="🍛"
-          title="500+ Events"
-          subtitle="Catered With Care"
-          delay={1.1}
-          style={{ top: '18%', right: '6%' }}
-        />
+        {cookingAnnouncements.length > 0 ? (
+          <FloatingCard
+            icon="🔥"
+            title="Ongoing Order"
+            subtitle={`${cookingAnnouncements[0].title} • Special Event`}
+            badge={
+              <>
+                <span className="live-dot"></span> Live
+              </>
+            }
+            className="floating-card--live"
+            delay={1.1}
+            style={{ top: '18%', right: '6%' }}
+            onClick={() =>
+              navigate('/catering?preorder=true#cooking-announcements', {
+                state: { openPreOrder: true },
+              })
+            }
+            ariaLabel={`Ongoing Order from MI Catering: ${cookingAnnouncements[0].title}. Click to open pre-order form.`}
+          />
+        ) : (
+          <FloatingCard
+            icon="🍛"
+            title="500+ Events"
+            subtitle="Catered With Care"
+            delay={1.1}
+            style={{ top: '18%', right: '6%' }}
+            onClick={() => navigate('/catering#cooking-announcements')}
+            ariaLabel="MI Catering: 500+ Events Catered With Care. Click to explore catering."
+          />
+        )}
         <FloatingCard
           icon="🌿"
           title="FSSAI Certified"
@@ -117,6 +141,42 @@ export default function Home() {
             Three trusted family businesses — premium catering, stone-ground masala, and
             traditional cold-pressed oils — united under one name you can rely on.
           </motion.p>
+
+          {cookingAnnouncements.length > 0 && (
+            <motion.div
+              className="hero-ongoing-pill"
+              onClick={() =>
+                navigate('/catering?preorder=true#cooking-announcements', {
+                  state: { openPreOrder: true },
+                })
+              }
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  navigate('/catering?preorder=true#cooking-announcements', {
+                    state: { openPreOrder: true },
+                  });
+                }
+              }}
+              title="Touch to open pre-order form for this special event"
+            >
+              <span className="pill-live-tag">
+                <span className="pill-pulse-dot" /> LIVE SPECIAL EVENT
+              </span>
+              <span className="pill-title">
+                MI Catering Ongoing Order: <strong>{cookingAnnouncements[0].title}</strong>
+              </span>
+              <span className="pill-action">Pre-Order Now &rarr;</span>
+            </motion.div>
+          )}
+
           <motion.div
             className="hero__ctas"
             initial={{ opacity: 0, y: 20 }}
@@ -162,7 +222,11 @@ export default function Home() {
                 onClick={(e) => {
                   // Only navigate if user did not click directly on an inner anchor or button
                   if (!e.target.closest('a') && !e.target.closest('button')) {
-                    navigate(b.to);
+                    if (b.key === 'catering' && cookingAnnouncements.length > 0) {
+                      navigate('/catering#cooking-announcements');
+                    } else {
+                      navigate(b.to);
+                    }
                   }
                 }}
                 initial={{ opacity: 0, y: 40 }}
@@ -171,7 +235,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: i * 0.12 }}
               >
                 <Link
-                  to={b.to}
+                  to={b.key === 'catering' && cookingAnnouncements.length > 0 ? '/catering#cooking-announcements' : b.to}
                   className="business-card__img"
                   style={{ backgroundImage: `url(${b.img})` }}
                   aria-label={`Open ${b.name}`}
@@ -184,11 +248,32 @@ export default function Home() {
                 </Link>
                 <div className="business-card__body">
                   <h3>
-                    <Link to={b.to}>{b.name}</Link>
+                    <Link to={b.key === 'catering' && cookingAnnouncements.length > 0 ? '/catering#cooking-announcements' : b.to}>
+                      {b.name}
+                    </Link>
                   </h3>
                   <p>{b.tagline}</p>
                   {b.key === 'catering' && cookingAnnouncements.length > 0 && (
-                    <div className="card-cooking-alert">
+                    <div
+                      className="card-cooking-alert"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/catering?preorder=true#cooking-announcements', {
+                          state: { openPreOrder: true },
+                        });
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      title="Touch to open pre-order form"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          navigate('/catering?preorder=true#cooking-announcements', {
+                            state: { openPreOrder: true },
+                          });
+                        }
+                      }}
+                    >
                       <span className="alert-pulse"></span>
                       <span className="alert-text">
                         📢 Special Cooking on{' '}
@@ -203,9 +288,21 @@ export default function Home() {
                       </span>
                     </div>
                   )}
-                  <Link to={b.to} className="btn btn--primary">
+                  <Link
+                    to={
+                      b.key === 'catering' && cookingAnnouncements.length > 0
+                        ? '/catering?preorder=true#cooking-announcements'
+                        : b.to
+                    }
+                    state={
+                      b.key === 'catering' && cookingAnnouncements.length > 0
+                        ? { openPreOrder: true }
+                        : undefined
+                    }
+                    className="btn btn--primary"
+                  >
                     {b.key === 'catering' && cookingAnnouncements.length > 0
-                      ? 'Pre-Order / Learn More →'
+                      ? 'Pre-Order Special Event →'
                       : 'Learn More →'}
                   </Link>
                 </div>

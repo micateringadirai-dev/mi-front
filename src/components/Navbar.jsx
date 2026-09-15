@@ -7,7 +7,7 @@ const links = [
   { to: '/', label: 'Home' },
   { to: '/catering', label: 'MI Catering' },
   { to: '/masala-mill', label: 'Ibrahim Masala Mill' },
-  { to: '/cold-press-oil', label: 'Aafiya Cold Pressed Oils' },
+  { to: '/cold-press-oil', label: 'Afiyah Cold Pressed Oils' },
 ];
 
 export default function Navbar() {

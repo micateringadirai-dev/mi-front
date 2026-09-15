@@ -127,7 +127,10 @@ export default function GrindingServicesPanel() {
         category: form.category,
         grindingType: form.grindingType,
         pricePerKg: parseFloat(form.pricePerKg) || 0,
-        minQuantityKg: parseFloat(form.minQuantityKg) || 1,
+        minQuantityKg:
+          form.minQuantityKg !== '' && !isNaN(parseFloat(form.minQuantityKg))
+            ? parseFloat(form.minQuantityKg)
+            : 1,
         notes: form.notes.trim(),
         image: form.image,
         isActive: form.isActive,
@@ -516,7 +519,7 @@ export default function GrindingServicesPanel() {
                     <label>Grinding Fee per Kg (₹) *</label>
                     <input
                       type="number"
-                      step="0.5"
+                      step="any"
                       min="0"
                       placeholder="e.g. 25"
                       value={form.pricePerKg}
@@ -528,8 +531,8 @@ export default function GrindingServicesPanel() {
                     <label>Minimum Quantity (Kg)</label>
                     <input
                       type="number"
-                      step="0.5"
-                      min="0.1"
+                      step="any"
+                      min="0"
                       placeholder="e.g. 1"
                       value={form.minQuantityKg}
                       onChange={(e) => setForm({ ...form, minQuantityKg: e.target.value })}

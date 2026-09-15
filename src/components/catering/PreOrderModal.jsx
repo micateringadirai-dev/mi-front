@@ -101,10 +101,16 @@ export default function PreOrderModal({
                 {[1, 2, 3, 4, 5, 10].map((num) => {
                   const minP = selectedAnnouncement.minPackets || 1;
                   if (num < minP) return null;
-                  // Strip any leading number from portionUnit (e.g. "1 Bucket" → "Bucket")
+                  // Strip any leading number from portionUnit (e.g. "1 Bucket (4-5 Persons)" → "Bucket (4-5 Persons)")
                   const rawUnit = portionUnit || 'Packet';
                   const unitLabel = rawUnit.replace(/^\d+\s*/, '');
-                  const label = num === 1 ? unitLabel : `${unitLabel}s`;
+                  const pluralize = (u) => {
+                    if (u.includes('(')) {
+                      return u.replace(/^([a-zA-Z]+)(\s*\(.*)/, '$1s$2');
+                    }
+                    return u.endsWith('s') ? u : `${u}s`;
+                  };
+                  const label = num === 1 ? unitLabel : pluralize(unitLabel);
                   return (
                     <button
                       key={num}
@@ -423,14 +429,25 @@ export default function PreOrderModal({
                 />
               </div>
             ) : (
-              <div className="selfservice-kitchen-box" style={{ marginBottom: '1rem' }}>
+              <div className="selfservice-kitchen-box">
                 <div className="kitchen-pin-icon">📍</div>
                 <div className="kitchen-details">
-                  <strong>MI Catering Central Kitchen (Pickup Counter)</strong>
-                  <p>Main Road, Adirampattinam, Tamil Nadu 614701</p>
-                  <span className="kitchen-status">
-                    ✓ Your packets will be freshly packed &amp; labeled with your name on cooking day.
-                  </span>
+                  <strong>M I CATERING SERVICE (Pickup Counter)</strong>
+                  <p>KALLUKOLLAI, Adirampattinam, Tamil Nadu 614701</p>
+                  <div className="kitchen-actions-row">
+                    <a
+                      href="https://www.google.com/maps/dir//M+I+CATERING+SERVICE+-+ADIRAMPATTINAM,+KALLUKOLLAI,+Adirampattinam,+Tamil+Nadu+614701/@10.3417539,79.3690824,3427m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x3b0003e6ec626489:0xd2bfb2e7528a21a3!2m2!1d79.3752531!2d10.3475511?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="kitchen-directions-btn"
+                    >
+                      <span>🗺️</span> View on Google Maps &rarr;
+                    </a>
+                  </div>
+                  <div className="kitchen-status">
+                    <span className="status-check">✓</span>
+                    <span>Your packets will be freshly packed &amp; labeled with your name on cooking day.</span>
+                  </div>
                 </div>
               </div>
             )}

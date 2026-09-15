@@ -1105,45 +1105,291 @@
   }
 }
 
-.selfservice-info-field {
-  .selfservice-kitchen-box {
-    background: #fffbf2;
-    border: 1.5px solid #f1ddbe;
-    border-radius: 12px;
-    padding: 1rem 1.15rem;
-    display: flex;
-    gap: 0.85rem;
-    align-items: flex-start;
+.selfservice-kitchen-box,
+.selfservice-info-field .selfservice-kitchen-box {
+  background: linear-gradient(145deg, #fffdfa 0%, #fff7ed 100%);
+  border: 1.5px solid #ecd5b7;
+  border-radius: 14px;
+  padding: 1.2rem 1.35rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  box-shadow: 0 8px 22px rgba(181, 72, 44, 0.08);
+  margin-bottom: 1.25rem;
+  transition: all 0.25s ease;
 
-    .kitchen-pin-icon {
+  &:hover {
+    border-color: #dfbf96;
+    box-shadow: 0 10px 26px rgba(181, 72, 44, 0.12);
+  }
+
+  .kitchen-pin-icon {
+    font-size: 1.35rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fcecd7 0%, #fae0c2 100%);
+    border: 1px solid #f2cca6;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(181, 72, 44, 0.1);
+  }
+
+  .kitchen-details {
+    flex: 1;
+    min-width: 0;
+
+    strong {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #3b2014;
+      display: block;
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.2px;
+    }
+
+    p {
+      font-size: 0.88rem;
+      color: #724e31;
+      margin: 0 0 0.85rem 0;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .kitchen-actions-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .kitchen-directions-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #cfa144 0%, #b88628 100%);
+      border: none;
+      padding: 0.52rem 1.05rem;
+      border-radius: 8px;
+      text-decoration: none !important;
+      box-shadow: 0 4px 14px rgba(184, 134, 40, 0.28);
+      transition: all 0.22s ease;
+      cursor: pointer;
+
+      &:hover {
+        background: linear-gradient(135deg, #deb35a 0%, #ca9631 100%);
+        box-shadow: 0 6px 18px rgba(184, 134, 40, 0.42);
+        transform: translateY(-2px);
+        color: #ffffff !important;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    .kitchen-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #165b24;
+      font-weight: 600;
+      background: #edf7ee;
+      border: 1px solid #cce8cf;
+      padding: 0.45rem 0.8rem;
+      border-radius: 8px;
+      line-height: 1.45;
+
+      .status-check {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #238838;
+        color: #ffffff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+/* =========================================================================
+   CATERING KITCHEN LOCATION & MAP SECTION
+   ========================================================================= */
+
+.catering-location-section {
+  padding: 4.5rem 0;
+  background: #fbf8f3;
+
+  .section-heading {
+    max-width: 680px;
+    margin: 0 auto 3rem;
+  }
+}
+
+.catering-location-card {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 2rem;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(207, 161, 68, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.location-info-pane {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @media (max-width: 600px) {
+    padding: 1.6rem;
+  }
+
+  .location-header {
+    .location-badge {
+      display: inline-block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #b5482c;
+      background: #fdf2ed;
+      border: 1px solid #f6cfc3;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: 1.55rem;
+      color: #3b2014;
+      margin: 0 0 0.35rem;
+      letter-spacing: 0.5px;
+    }
+
+    .location-tagline {
+      font-size: 0.9rem;
+      color: #8c6a51;
+      margin: 0;
+    }
+  }
+
+  .location-address-box {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: #fdfbf7;
+    border: 1px solid #f0e3d2;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+
+    .address-icon {
       font-size: 1.5rem;
       line-height: 1;
     }
 
-    .kitchen-details {
+    .address-text {
       strong {
-        font-size: 0.94rem;
-        color: #633c16;
         display: block;
-        margin-bottom: 0.2rem;
+        font-size: 0.92rem;
+        color: #55341c;
+        margin-bottom: 0.25rem;
       }
 
       p {
-        font-size: 0.84rem;
-        color: #7b5839;
-        margin: 0 0 0.4rem 0;
-      }
-
-      .kitchen-status {
-        display: inline-block;
-        font-size: 0.78rem;
-        color: #1b6223;
-        font-weight: 600;
-        background: #eef7ee;
-        padding: 0.2rem 0.5rem;
-        border-radius: 6px;
+        font-size: 0.88rem;
+        color: #724e31;
+        margin: 0;
+        line-height: 1.45;
       }
     }
+  }
+
+  .location-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 500px) {
+      grid-template-columns: 1fr;
+    }
+
+    .meta-item {
+      background: #faf7f2;
+      border: 1px solid #f1e7d8;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+
+      .meta-label {
+        display: block;
+        font-size: 0.74rem;
+        color: #916c4f;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+      }
+
+      .meta-val {
+        font-size: 0.86rem;
+        font-weight: 700;
+        color: #402315;
+        text-decoration: none;
+
+        &:hover {
+          color: #b5482c;
+        }
+      }
+    }
+  }
+
+  .location-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+
+    .btn--directions {
+      background: linear-gradient(135deg, #cfa144 0%, #b88628 100%);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 6px 18px rgba(184, 134, 40, 0.35);
+
+      &:hover {
+        background: linear-gradient(135deg, #deb35a 0%, #ca9631 100%);
+        box-shadow: 0 8px 22px rgba(184, 134, 40, 0.45);
+      }
+    }
+  }
+}
+
+.location-map-pane {
+  background: #f2ece4;
+  position: relative;
+  min-height: 380px;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    border: none;
+    display: block;
   }
 }
 

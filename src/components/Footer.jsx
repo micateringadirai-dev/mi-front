@@ -14,7 +14,7 @@ export default function Footer() {
           </h3>
           <p>
             A family of trusted businesses — MI Catering Services, Ibrahim Masala Mill, and
-            Aafiya Cold Pressed Oils — serving quality, purity, and tradition since generations.
+            Afiyah Cold Pressed Oils — serving quality, purity, and tradition since generations.
           </p>
           <div className="footer__crest">
             <span className="crest-tag">Family Run • FSSAI Certified • Est. Generations</span>
@@ -26,7 +26,7 @@ export default function Footer() {
           <ul className="footer__links">
             <li><Link to="/catering">MI Catering Services</Link></li>
             <li><Link to="/masala-mill">Ibrahim Masala Mill</Link></li>
-            <li><Link to="/cold-press-oil">Aafiya Cold Pressed Oils</Link></li>
+            <li><Link to="/cold-press-oil">Afiyah Cold Pressed Oils</Link></li>
           </ul>
         </div>
 
@@ -46,13 +46,22 @@ export default function Footer() {
               </a>
             </div>
             <div className="footer-contact-item">
-              <span className="biz-name">Aafiya Cold Pressed Oil</span>
+              <span className="biz-name">Afiyah Cold Pressed Oil</span>
               <a href="tel:+919629533887" className="contact-link">
                 <span className="contact-icon">📞</span> +91 96295 33887
               </a>
             </div>
             <p className="footer-address">
-              <span className="contact-icon">📍</span> Adirampattinam, Tamil Nadu
+              <a
+                href="https://www.google.com/maps/dir//M+I+CATERING+SERVICE+-+ADIRAMPATTINAM,+KALLUKOLLAI,+Adirampattinam,+Tamil+Nadu+614701/@10.3417539,79.3690824,3427m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x3b0003e6ec626489:0xd2bfb2e7528a21a3!2m2!1d79.3752531!2d10.3475511?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-address-link"
+                title="View MI Catering on Google Maps"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                <span className="contact-icon">📍</span> Kallukollai, Adirampattinam, Tamil Nadu ↗
+              </a>
             </p>
           </div>
         </div>
