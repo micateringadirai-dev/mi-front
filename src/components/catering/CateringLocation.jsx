@@ -47,10 +47,10 @@ export default function CateringLocation() {
                 <span className="meta-label">🛍️ Fulfillment</span>
                 <span className="meta-val">Doorstep Delivery &amp; Self Pickup</span>
               </div>
-              <div className="meta-item">
+              {/* <div className="meta-item">
                 <span className="meta-label">🕒 Operating Hours</span>
                 <span className="meta-val">6:00 AM – 10:00 PM Daily</span>
-              </div>
+              </div> */}
             </div>
 
             <div className="location-actions">
