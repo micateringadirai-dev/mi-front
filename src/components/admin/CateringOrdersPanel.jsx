@@ -61,12 +61,271 @@ export default function CateringOrdersPanel() {
     }
   };
 
+  const handlePrintSlip = () => {
+    const slip = document.getElementById('printable-order-slip');
+    if (!slip) {
+      window.print();
+      return;
+    }
+
+    try {
+      let printFrame = document.getElementById('print-receipt-hidden-iframe');
+      if (printFrame) {
+        document.body.removeChild(printFrame);
+      }
+      printFrame = document.createElement('iframe');
+      printFrame.id = 'print-receipt-hidden-iframe';
+      printFrame.style.position = 'fixed';
+      printFrame.style.right = '0';
+      printFrame.style.bottom = '0';
+      printFrame.style.width = '0';
+      printFrame.style.height = '0';
+      printFrame.style.border = '0';
+      printFrame.style.visibility = 'hidden';
+      document.body.appendChild(printFrame);
+
+      const frameDoc = printFrame.contentWindow.document;
+      frameDoc.open();
+      frameDoc.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>MI Catering - Slip #${printSlipOrder?._id ? printSlipOrder._id.slice(-6).toUpperCase() : 'RECEIPT'}</title>
+  <style>
+    @page {
+      size: auto;
+      margin: 8mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #ffffff;
+      color: #111827;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      padding: 10px;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    .printable-slip {
+      max-width: 440px;
+      margin: 0 auto;
+      background: #ffffff;
+      color: #111827;
+    }
+    .slip-header {
+      text-align: center;
+      margin-bottom: 0.85rem;
+    }
+    .slip-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #831843;
+      margin: 0 0 0.15rem;
+      letter-spacing: 0.5px;
+    }
+    .slip-sub {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #4b5563;
+      margin: 0 0 0.15rem;
+    }
+    .slip-meta, .slip-fssai {
+      font-size: 0.74rem;
+      color: #6b7280;
+      margin: 0;
+    }
+    .slip-fssai {
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+    .slip-badge-line {
+      display: flex;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .slip-type-badge, .slip-mode-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+    .slip-type-badge {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    .slip-mode-badge {
+      background: #e0e7ff;
+      color: #3730a3;
+      border: 1px solid #c7d2fe;
+    }
+    .slip-divider {
+      height: 1px;
+      border-top: 1px dashed #9ca3af;
+      margin: 0.65rem 0;
+    }
+    .slip-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .slip-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.84rem;
+    }
+    .slip-label {
+      color: #4b5563;
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+    .slip-val {
+      color: #111827;
+      text-align: right;
+      word-break: break-word;
+    }
+    .slip-row--highlight {
+      background: #fef2f2;
+      padding: 0.35rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.2rem;
+    }
+    .slip-row--highlight .slip-label,
+    .slip-row--highlight .slip-val {
+      color: #991b1b;
+      font-weight: 800;
+    }
+    .slip-items-table {
+      margin: 0.5rem 0;
+    }
+    .slip-items-header {
+      display: grid;
+      grid-template-columns: 2fr 45px 55px 65px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #4b5563;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid #e5e7eb;
+      gap: 0.25rem;
+    }
+    .col-qty, .col-rate, .col-total {
+      text-align: right;
+    }
+    .slip-item-row {
+      display: grid;
+      grid-template-columns: 2fr 45px 55px 65px;
+      font-size: 0.82rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px dotted #f3f4f6;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .slip-item-row--main {
+      font-weight: 700;
+      color: #111827;
+    }
+    .slip-item-unit {
+      display: block;
+      font-weight: normal;
+      font-size: 0.72rem;
+      color: #6b7280;
+    }
+    .slip-item-row--extra {
+      color: #374151;
+      font-size: 0.78rem;
+    }
+    .slip-totals {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-top: 0.5rem;
+    }
+    .slip-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: #374151;
+    }
+    .slip-total-row--discount {
+      color: #dc2626;
+      font-weight: 600;
+    }
+    .slip-total-row--final {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #111827;
+      padding-top: 0.4rem;
+      border-top: 2px solid #111827;
+      margin-top: 0.25rem;
+    }
+    .slip-notes {
+      font-size: 0.78rem;
+      color: #4b5563;
+      background: #f9fafb;
+      padding: 0.5rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+    .slip-notes p {
+      margin: 0.15rem 0;
+    }
+    .slip-footer {
+      text-align: center;
+      margin-top: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed #d1d5db;
+    }
+    .slip-footer p {
+      margin: 0.15rem 0;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    .slip-tagline {
+      font-weight: 600;
+      color: #92400e;
+    }
+  </style>
+</head>
+<body>
+  <div class="printable-slip">
+    ${slip.innerHTML}
+  </div>
+</body>
+</html>`);
+      frameDoc.close();
+
+      setTimeout(() => {
+        try {
+          printFrame.contentWindow.focus();
+          printFrame.contentWindow.print();
+        } catch {
+          window.print();
+        }
+      }, 250);
+    } catch {
+      window.print();
+    }
+  };
+
   const exportExcel = () => {
     const params = new URLSearchParams();
     if (filters.date) params.set('date', filters.date);
     if (filters.status) params.set('status', filters.status);
     if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
     if (filters.orderType) params.set('orderType', filters.orderType);
+    if (filters.search) params.set('search', filters.search);
     const token = localStorage.getItem('mi_admin_token');
     fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -87,6 +346,9 @@ export default function CateringOrdersPanel() {
     params.set('mode', 'prep');
     if (filters.date) params.set('date', filters.date);
     if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
+    if (filters.status) params.set('status', filters.status);
+    if (filters.orderType) params.set('orderType', filters.orderType);
+    if (filters.search) params.set('search', filters.search);
     const token = localStorage.getItem('mi_admin_token');
     fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -622,7 +884,7 @@ export default function CateringOrdersPanel() {
               <button
                 type="button"
                 className="btn btn--primary"
-                onClick={() => window.print()}
+                onClick={handlePrintSlip}
               >
                 🖨️ Print Slip Now
               </button>

@@ -30,39 +30,73 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="footer__contact-col">
           <h4>Contact &amp; Visit Us</h4>
           <div className="footer-contacts">
             <div className="footer-contact-item">
-              <span className="biz-name">MI Catering</span>
-              <a href="tel:+919842096814" className="contact-link">
-                <span className="contact-icon">📞</span> +91 98420 96814
+              <div className="contact-biz-header">
+                <span className="biz-dot" aria-hidden="true" />
+                <span className="biz-name">MI Catering</span>
+              </div>
+              <a href="tel:+919842096814" className="contact-link" aria-label="Call MI Catering at +91 98420 96814">
+                <svg className="contact-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
+                  <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                </svg>
+                <span>+91 98420 96814</span>
               </a>
             </div>
+
             <div className="footer-contact-item">
-              <span className="biz-name">Ibrahim Masala Mill</span>
-              <a href="tel:+919629533887" className="contact-link">
-                <span className="contact-icon">📞</span> +91 96295 33887
+              <div className="contact-biz-header">
+                <span className="biz-dot" aria-hidden="true" />
+                <span className="biz-name">Ibrahim Masala Mill</span>
+              </div>
+              <a href="tel:+919629533887" className="contact-link" aria-label="Call Ibrahim Masala Mill at +91 96295 33887">
+                <svg className="contact-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
+                  <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                </svg>
+                <span>+91 96295 33887</span>
               </a>
             </div>
+
             <div className="footer-contact-item">
-              <span className="biz-name">Afiyah Cold Pressed Oil</span>
-              <a href="tel:+919629533887" className="contact-link">
-                <span className="contact-icon">📞</span> +91 96295 33887
+              <div className="contact-biz-header">
+                <span className="biz-dot" aria-hidden="true" />
+                <span className="biz-name">Afiyah Cold Pressed Oil</span>
+              </div>
+              <a href="tel:+919629533887" className="contact-link" aria-label="Call Afiyah Cold Pressed Oil at +91 96295 33887">
+                <svg className="contact-icon-svg" viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
+                  <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+                </svg>
+                <span>+91 96295 33887</span>
               </a>
             </div>
-            <p className="footer-address">
-              <a
-                href="https://www.google.com/maps/dir//M+I+CATERING+SERVICE+-+ADIRAMPATTINAM,+KALLUKOLLAI,+Adirampattinam,+Tamil+Nadu+614701/@10.3417539,79.3690824,3427m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x3b0003e6ec626489:0xd2bfb2e7528a21a3!2m2!1d79.3752531!2d10.3475511?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-address-link"
-                title="View MI Catering on Google Maps"
-                style={{ color: 'inherit', textDecoration: 'none' }}
-              >
-                <span className="contact-icon">📍</span> Kallukollai, Adirampattinam, Tamil Nadu ↗
-              </a>
-            </p>
+
+            <a
+              href="https://www.google.com/maps/dir//M+I+CATERING+SERVICE+-+ADIRAMPATTINAM,+KALLUKOLLAI,+Adirampattinam,+Tamil+Nadu+614701/@10.3417539,79.3690824,3427m/data=!3m1!1e3!4m8!4m7!1m0!1m5!1m1!1s0x3b0003e6ec626489:0xd2bfb2e7528a21a3!2m2!1d79.3752531!2d10.3475511?entry=ttu&g_ep=EgoyMDI2MDkwOS4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-location-card"
+              title="Get directions to MI Groups Central Kitchen & Mill on Google Maps"
+            >
+              <div className="location-icon-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+              </div>
+              <div className="location-content">
+                <span className="location-hub-label">Central Kitchen &amp; Mill</span>
+                <span className="location-hub-address">Kallukollai, Adirampattinam</span>
+                <span className="location-hub-state">Tamil Nadu 614701</span>
+              </div>
+              <span className="location-directions-pill">
+                <span>Map</span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="7" y1="17" x2="17" y2="7"></line>
+                  <polyline points="7 7 17 7 17 17"></polyline>
+                </svg>
+              </span>
+            </a>
           </div>
         </div>
 
