@@ -7,6 +7,9 @@ export default function CateringOrdersPanel() {
   const [filters, setFilters] = useState({ date: '', status: '', search: '', deliveryType: '', orderType: '' });
   const [loading, setLoading] = useState(true);
   const [printSlipOrder, setPrintSlipOrder] = useState(null);
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showPrepModal, setShowPrepModal] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
   const [viewMode, setViewMode] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth <= 768 ? 'cards' : 'table'
   );
@@ -319,54 +322,159 @@ export default function CateringOrdersPanel() {
     }
   };
 
-  const exportExcel = () => {
-    const params = new URLSearchParams();
-    if (filters.date) params.set('date', filters.date);
-    if (filters.status) params.set('status', filters.status);
-    if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
-    if (filters.orderType) params.set('orderType', filters.orderType);
-    if (filters.search) params.set('search', filters.search);
-    const token = localStorage.getItem('mi_admin_token');
-    fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `catering-orders-${filters.deliveryType ? filters.deliveryType.toLowerCase().replace(/\s+/g, '-') + '-' : ''}${filters.date || 'all'}.xlsx`;
-        a.click();
-      })
-      .catch(() => toast.error('Export failed'));
+  const triggerMobileDownload = (blob, filename, mimeType) => {
+    const fileBlob = new Blob([blob], { type: mimeType });
+    const url = window.URL.createObjectURL(fileBlob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = filename;
+    a.setAttribute('download', filename);
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      if (document.body.contains(a)) {
+        document.body.removeChild(a);
+      }
+      window.URL.revokeObjectURL(url);
+    }, 1000);
   };
 
-  const exportKitchenPrepSheet = () => {
-    const params = new URLSearchParams();
-    params.set('mode', 'prep');
-    if (filters.date) params.set('date', filters.date);
-    if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
-    if (filters.status) params.set('status', filters.status);
-    if (filters.orderType) params.set('orderType', filters.orderType);
-    if (filters.search) params.set('search', filters.search);
-    const token = localStorage.getItem('mi_admin_token');
-    fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error('Export failed');
-        return res.blob();
-      })
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `kitchen-prep-review-${filters.date || 'all'}.xlsx`;
-        a.click();
-        toast.success('Kitchen Preparation Review Sheet downloaded!');
-      })
-      .catch(() => toast.error('Preparation sheet export failed'));
+  const shareOrDownloadFile = async (blob, filename, mimeType, title) => {
+    const fileBlob = new Blob([blob], { type: mimeType });
+    const file = new File([fileBlob], filename, { type: mimeType });
+
+    if (typeof navigator !== 'undefined' && navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          files: [file],
+          title: title || filename,
+          text: `MI Catering: ${filename}`,
+        });
+        toast.success('Shared successfully!');
+        return;
+      } catch (err) {
+        if (err.name === 'AbortError') return;
+      }
+    }
+
+    triggerMobileDownload(fileBlob, filename, mimeType);
+    toast.success(`File downloaded (${filename.endsWith('.csv') ? 'CSV' : 'Excel'})`);
   };
+
+  const handleExport = async (format = 'xlsx', action = 'download') => {
+    setExportLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filters.date) params.set('date', filters.date);
+      if (filters.status) params.set('status', filters.status);
+      if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
+      if (filters.orderType) params.set('orderType', filters.orderType);
+      if (filters.search) params.set('search', filters.search);
+      if (format === 'csv') params.set('format', 'csv');
+
+      const token = localStorage.getItem('mi_admin_token');
+      const res = await fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error('Export failed');
+
+      const blob = await res.blob();
+      const ext = format === 'csv' ? 'csv' : 'xlsx';
+      const mime = format === 'csv'
+        ? 'text/csv;charset=utf-8;'
+        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const filename = `catering-orders-${filters.deliveryType ? filters.deliveryType.toLowerCase().replace(/\s+/g, '-') + '-' : ''}${filters.date || 'all'}.${ext}`;
+
+      if (action === 'share') {
+        await shareOrDownloadFile(blob, filename, mime, 'MI Catering Orders');
+      } else {
+        triggerMobileDownload(blob, filename, mime);
+        toast.success(`Downloaded ${ext.toUpperCase()} successfully!`);
+      }
+      setShowExportModal(false);
+    } catch {
+      toast.error('Export failed. Please check network connection.');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const handleExportKitchenPrep = async (format = 'xlsx', action = 'download') => {
+    setExportLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.set('mode', 'prep');
+      if (filters.date) params.set('date', filters.date);
+      if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
+      if (filters.status) params.set('status', filters.status);
+      if (filters.orderType) params.set('orderType', filters.orderType);
+      if (filters.search) params.set('search', filters.search);
+      if (format === 'csv') params.set('format', 'csv');
+
+      const token = localStorage.getItem('mi_admin_token');
+      const res = await fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error('Export failed');
+
+      const blob = await res.blob();
+      const ext = format === 'csv' ? 'csv' : 'xlsx';
+      const mime = format === 'csv'
+        ? 'text/csv;charset=utf-8;'
+        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const filename = `kitchen-prep-review-${filters.date || 'all'}.${ext}`;
+
+      if (action === 'share') {
+        await shareOrDownloadFile(blob, filename, mime, 'Kitchen Prep Review');
+      } else {
+        triggerMobileDownload(blob, filename, mime);
+        toast.success(`Downloaded Kitchen Prep ${ext.toUpperCase()}!`);
+      }
+    } catch {
+      toast.error('Preparation sheet export failed');
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  // Kitchen preparation aggregation for live preview modal
+  const prepDishes = {};
+  orders.forEach((o) => {
+    const key = `${o.itemName}___${o.portionUnit || 'Packet'}`;
+    if (!prepDishes[key]) {
+      prepDishes[key] = {
+        name: o.itemName,
+        portionUnit: o.portionUnit || 'Packet',
+        quantity: 0,
+        ordersCount: 0,
+      };
+    }
+    prepDishes[key].quantity += Number(o.numberOfPackets) || 0;
+    prepDishes[key].ordersCount += 1;
+  });
+
+  const prepExtras = {};
+  orders.forEach((o) => {
+    if (Array.isArray(o.selectedExtras)) {
+      o.selectedExtras.forEach((ex) => {
+        if (!ex.name) return;
+        const key = `${ex.name}___${ex.portion || ''}`;
+        if (!prepExtras[key]) {
+          prepExtras[key] = {
+            name: ex.name,
+            portion: ex.portion || '—',
+            quantity: 0,
+            ordersCount: 0,
+          };
+        }
+        prepExtras[key].quantity += Number(ex.quantity) || 1;
+        prepExtras[key].ordersCount += 1;
+      });
+    }
+  });
 
   const deliveryOrdersCount = orders.filter((o) => (o.deliveryType || 'Delivery') === 'Delivery').length;
   const selfServiceOrdersCount = orders.filter((o) => o.deliveryType === 'Self Service').length;
@@ -488,8 +596,8 @@ export default function CateringOrdersPanel() {
           />
         </div>
         <div className="filter-actions">
-          <button className="btn btn--primary btn--sm" onClick={fetchOrders}>
-            Filter
+          <button className="btn btn--primary btn--sm" onClick={fetchOrders} title="Apply filters">
+            🔍 Filter
           </button>
           <button
             type="button"
@@ -497,20 +605,26 @@ export default function CateringOrdersPanel() {
             onClick={() => {
               setFilters({ orderType: '', status: '', deliveryType: '', search: '', date: '' });
             }}
-            title="Unselect and reset all filters"
+            title="Reset all filters"
           >
             ↺ Reset
           </button>
-          <button className="btn btn--outline btn--sm" onClick={exportExcel} title="Export current filtered orders">
-            ⬇ Export Excel
+          <button
+            type="button"
+            className="btn btn--outline btn--sm"
+            onClick={() => setShowExportModal(true)}
+            title="Export orders to Excel, Mobile CSV, or Share"
+          >
+            ⬇ Export Orders
           </button>
           <button
+            type="button"
             className="btn btn--outline btn--sm btn--prep-export"
-            onClick={exportKitchenPrepSheet}
-            title="Export full kitchen preparation review & dispatch sheet for selected date"
+            onClick={() => setShowPrepModal(true)}
+            title="View or export kitchen preparation review sheet"
             style={{ borderColor: '#2d6a4f', color: '#1b4332', fontWeight: '600' }}
           >
-            📅 Export Prep Sheet (.xlsx)
+            📅 Prep Sheet
           </button>
         </div>
       </div>
@@ -1036,6 +1150,297 @@ export default function CateringOrdersPanel() {
                 <p>Thank you for placing your order with MI Catering!</p>
                 <p className="slip-tagline">Quality Ingredients • Clean Preparation • Trusted Taste</p>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* EXPORT OPTIONS MODAL */}
+      {showExportModal && (
+        <div className="export-options-modal-backdrop" onClick={() => setShowExportModal(false)}>
+          <div className="export-options-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                <span>⬇ Export Orders Manifest</span>
+              </h3>
+              <button
+                type="button"
+                className="btn-close-modal"
+                onClick={() => setShowExportModal(false)}
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-subtitle">
+                Exporting {orders.length} order{orders.length === 1 ? '' : 's'}. Choose the format for your device:
+              </p>
+
+              <button
+                type="button"
+                className="export-option-card export-option-card--recommended"
+                onClick={() => handleExport('csv', 'download')}
+                disabled={exportLoading}
+              >
+                <div className="option-info">
+                  <span className="option-icon">📱</span>
+                  <div className="option-text">
+                    <span className="option-title">
+                      Mobile CSV (.csv)
+                      <span className="badge-rec">Recommended on Mobile</span>
+                    </span>
+                    <span className="option-desc">
+                      Opens immediately on ANY smartphone (iPhone / Android) without needing Microsoft Excel.
+                    </span>
+                  </div>
+                </div>
+                <span className="option-action-arrow">➔</span>
+              </button>
+
+              <button
+                type="button"
+                className="export-option-card"
+                onClick={() => handleExport('xlsx', 'download')}
+                disabled={exportLoading}
+              >
+                <div className="option-info">
+                  <span className="option-icon">📊</span>
+                  <div className="option-text">
+                    <span className="option-title">Excel Spreadsheet (.xlsx)</span>
+                    <span className="option-desc">
+                      Standard Microsoft Excel workbook format with styled columns and header branding.
+                    </span>
+                  </div>
+                </div>
+                <span className="option-action-arrow">➔</span>
+              </button>
+
+              <button
+                type="button"
+                className="export-option-card"
+                onClick={() => handleExport('csv', 'share')}
+                disabled={exportLoading}
+              >
+                <div className="option-info">
+                  <span className="option-icon">📤</span>
+                  <div className="option-text">
+                    <span className="option-title">Share to WhatsApp / Apps</span>
+                    <span className="option-desc">
+                      Directly share orders file to kitchen staff or delivery partners on WhatsApp or Drive.
+                    </span>
+                  </div>
+                </div>
+                <span className="option-action-arrow">➔</span>
+              </button>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn--outline btn--sm"
+                onClick={() => setShowExportModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* KITCHEN PREP REVIEW MODAL */}
+      {showPrepModal && (
+        <div className="prep-sheet-modal-backdrop" onClick={() => setShowPrepModal(false)}>
+          <div className="prep-sheet-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>
+                <span>📅 Kitchen Preparation Review</span>
+              </h3>
+              <button
+                type="button"
+                className="btn-close-modal"
+                onClick={() => setShowPrepModal(false)}
+                title="Close"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="prep-summary-bar">
+                <div className="prep-stat">
+                  <span className="prep-stat-label">Scheduled Date</span>
+                  <strong className="prep-stat-val" style={{ fontSize: '1rem' }}>
+                    {filters.date ? new Date(filters.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'All Scheduled Dates'}
+                  </strong>
+                </div>
+                <div className="prep-stat">
+                  <span className="prep-stat-label">Total Packets</span>
+                  <strong className="prep-stat-val">{totalPacketsCount}</strong>
+                </div>
+                <div className="prep-stat">
+                  <span className="prep-stat-label">Doorstep Delivery</span>
+                  <strong className="prep-stat-val" style={{ color: '#2563eb' }}>{deliveryOrdersCount}</strong>
+                </div>
+                <div className="prep-stat">
+                  <span className="prep-stat-label">Self Service</span>
+                  <strong className="prep-stat-val" style={{ color: '#d97706' }}>{selfServiceOrdersCount}</strong>
+                </div>
+              </div>
+
+              {/* SECTION 1: MAIN DISHES */}
+              <div className="prep-section">
+                <h4>🍱 1. Main Dishes to Cook (Kitchen Quantities)</h4>
+                <div className="prep-table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Main Dish / Menu Item</th>
+                        <th>Portion Unit</th>
+                        <th style={{ textAlign: 'right' }}>Total Packets</th>
+                        <th style={{ textAlign: 'right' }}>Orders</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.values(prepDishes).length === 0 ? (
+                        <tr>
+                          <td colSpan={4} style={{ textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
+                            No orders found for the selected filters.
+                          </td>
+                        </tr>
+                      ) : (
+                        Object.values(prepDishes).map((d) => (
+                          <tr key={d.name}>
+                            <td><strong>{d.name}</strong></td>
+                            <td>{d.portionUnit}</td>
+                            <td className="num-cell" style={{ color: '#1b4332' }}>{d.quantity}</td>
+                            <td className="num-cell">{d.ordersCount}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* SECTION 2: EXTRAS */}
+              {Object.values(prepExtras).length > 0 && (
+                <div className="prep-section">
+                  <h4>🥘 2. Extra Side Dishes & Add-ons</h4>
+                  <div className="prep-table-wrapper">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Side Dish / Extra</th>
+                          <th>Portion</th>
+                          <th style={{ textAlign: 'right' }}>Portions Needed</th>
+                          <th style={{ textAlign: 'right' }}>Orders</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {Object.values(prepExtras).map((e) => (
+                          <tr key={e.name}>
+                            <td><strong>{e.name}</strong></td>
+                            <td>{e.portion}</td>
+                            <td className="num-cell" style={{ color: '#b45309' }}>{e.quantity}</td>
+                            <td className="num-cell">{e.ordersCount}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* SECTION 3: DISPATCH LIST */}
+              <div className="prep-section">
+                <h4>🚚 3. Booked Orders & Dispatch Checklist ({orders.length})</h4>
+                <div className="prep-table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Order</th>
+                        <th>Mode</th>
+                        <th>Packets</th>
+                        <th>Customer</th>
+                        <th>Address / Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} style={{ textAlign: 'center', color: '#6b7280', padding: '1rem' }}>
+                            No bookings found.
+                          </td>
+                        </tr>
+                      ) : (
+                        orders.map((o) => (
+                          <tr key={o._id}>
+                            <td><strong>#{o._id.slice(-6).toUpperCase()}</strong></td>
+                            <td>
+                              <span style={{
+                                fontSize: '0.72rem',
+                                fontWeight: '700',
+                                padding: '0.15rem 0.4rem',
+                                borderRadius: '4px',
+                                background: o.deliveryType === 'Self Service' ? '#fffbeb' : '#eff6ff',
+                                color: o.deliveryType === 'Self Service' ? '#b45309' : '#1d4ed8'
+                              }}>
+                                {o.deliveryType === 'Self Service' ? '🛍️ Pickup' : '🚚 Delivery'}
+                              </span>
+                            </td>
+                            <td className="num-cell">{o.numberOfPackets}</td>
+                            <td>
+                              <div><strong>{o.customerName}</strong></div>
+                              <a href={`tel:${o.mobileNumber}`} style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+                                📞 {o.mobileNumber}
+                              </a>
+                            </td>
+                            <td style={{ fontSize: '0.75rem', maxWidth: '180px' }}>
+                              {o.address || '-'}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="btn btn--outline"
+                onClick={() => handleExportKitchenPrep('csv', 'download')}
+                disabled={exportLoading}
+                title="Download CSV that opens immediately on any smartphone"
+              >
+                📱 Mobile CSV
+              </button>
+              <button
+                type="button"
+                className="btn btn--outline"
+                onClick={() => handleExportKitchenPrep('xlsx', 'download')}
+                disabled={exportLoading}
+                title="Download formatted Excel workbook"
+              >
+                📊 Excel (.xlsx)
+              </button>
+              <button
+                type="button"
+                className="btn btn--outline"
+                onClick={() => handleExportKitchenPrep('csv', 'share')}
+                disabled={exportLoading}
+                title="Share file directly to WhatsApp"
+              >
+                📤 Share WhatsApp
+              </button>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={() => setShowPrepModal(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

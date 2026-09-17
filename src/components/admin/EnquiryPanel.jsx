@@ -41,20 +41,38 @@ export default function EnquiryPanel({ resource, itemLabel }) {
     }
   };
 
-  const exportExcel = () => {
+  const exportFile = async (format = 'xlsx') => {
     const token = localStorage.getItem('mi_admin_token');
-    fetch(`/api/${resource}/admin/enquiries/export/excel`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${resource}-enquiries.xlsx`;
-        a.click();
-      })
-      .catch(() => toast.error('Export failed'));
+    const isCsv = format === 'csv';
+    try {
+      const res = await fetch(`/api/${resource}/admin/enquiries/export/excel?format=${format}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Export failed');
+
+      const blob = await res.blob();
+      const ext = isCsv ? 'csv' : 'xlsx';
+      const mime = isCsv
+        ? 'text/csv;charset=utf-8;'
+        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      const filename = `${resource}-enquiries.${ext}`;
+
+      const fileBlob = new Blob([blob], { type: mime });
+      const url = window.URL.createObjectURL(fileBlob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        if (document.body.contains(a)) document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      }, 1000);
+      toast.success(`Downloaded ${ext.toUpperCase()} successfully!`);
+    } catch {
+      toast.error('Export failed');
+    }
   };
 
   const title = resource === 'masala' ? 'Masala Mill Enquiries' : 'Cold Press Oil Enquiries';
@@ -83,8 +101,21 @@ export default function EnquiryPanel({ resource, itemLabel }) {
           <button className="btn btn--primary btn--sm" onClick={fetchRows}>
             Filter
           </button>
-          <button className="btn btn--outline btn--sm" onClick={exportExcel}>
+          <button
+            type="button"
+            className="btn btn--outline btn--sm"
+            onClick={() => exportFile('xlsx')}
+            title="Download Excel spreadsheet"
+          >
             ⬇ Export Excel
+          </button>
+          <button
+            type="button"
+            className="btn btn--outline btn--sm"
+            onClick={() => exportFile('csv')}
+            title="Download CSV for Mobile without Excel app"
+          >
+            📱 Mobile CSV
           </button>
         </div>
       </div>
