@@ -17,9 +17,9 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Reject HTML responses from Vercel SPA rewrites when API is offline or unrouted
+// Reject HTML responses from Vercel SPA rewrites when API is offline, unrouted, or binary download returned HTML
 api.interceptors.response.use(
-  (response) => {
+  async (response) => {
     if (
       typeof response.data === 'string' &&
       (response.data.includes('<!doctype html') || response.data.includes('<html'))
@@ -28,6 +28,19 @@ api.interceptors.response.use(
         new Error('Backend API returned HTML instead of JSON (SPA rewrite). Verify backend URL or VITE_API_URL.')
       );
     }
+
+    if (response.data instanceof Blob) {
+      const type = response.data.type || response.headers?.['content-type'] || '';
+      if (type.includes('text/html')) {
+        const text = await response.data.text();
+        if (text.includes('<!doctype') || text.includes('<html')) {
+          return Promise.reject(
+            new Error('Backend API returned HTML instead of file download (SPA rewrite). Verify backend URL or VITE_API_URL.')
+          );
+        }
+      }
+    }
+
     return response;
   },
   (error) => Promise.reject(error)

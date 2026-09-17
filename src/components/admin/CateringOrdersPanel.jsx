@@ -362,39 +362,243 @@ export default function CateringOrdersPanel() {
     toast.success(`File downloaded (${filename.endsWith('.csv') ? 'CSV' : 'Excel'})`);
   };
 
+  // Helper to escape CSV strings with proper quoting and UTF-8 safety
+  const escapeCsvVal = (val) => {
+    if (val === null || val === undefined) return '';
+    const s = String(val).replace(/"/g, '""');
+    if (s.search(/("|,|\n|\r)/g) >= 0) {
+      return `"${s}"`;
+    }
+    return s;
+  };
+
+  // Client-side fallback generator for Orders Manifest
+  const generateClientOrdersCsv = (ordersList) => {
+    const headers = [
+      'Order Ref',
+      'Order Type',
+      'Item / Event Name',
+      'Portion Unit',
+      'Packets',
+      'Extra Side Dishes',
+      'Subtotal',
+      'Discount',
+      'Final Total',
+      'Fulfillment Mode',
+      'Customer Name',
+      'Mobile Number',
+      'Scheduled Date',
+      'Delivery Address / Pickup Location',
+      'Food Requirements',
+      'Special Instructions',
+      'Status',
+      'Submitted At',
+    ];
+
+    const rows = (ordersList || []).map((o) => {
+      const extrasStr =
+        Array.isArray(o.selectedExtras) && o.selectedExtras.length > 0
+          ? o.selectedExtras
+              .map((e) => `${e.name}${e.portion ? ` (${e.portion})` : ''} × ${e.quantity || 1}`)
+              .join(', ')
+          : '—';
+      const packets = Number(o.numberOfPackets) || 0;
+      const subtotal = Number(o.subtotalAmount) || Number(o.estimatedAmount) || 0;
+      const discount = Number(o.discountAmount) || 0;
+      const finalAmt = Number(o.finalAmount) || Number(o.estimatedAmount) || 0;
+      let discountInfo = '—';
+      if (discount > 0) {
+        discountInfo = `-₹${discount.toLocaleString('en-IN')}${o.discountType === 'percentage' ? ` (${o.discountValue}%)` : ''}`;
+      }
+
+      return [
+        `#${(o._id || '').toString().slice(-6).toUpperCase()}`,
+        o.orderType === 'quotation' ? 'Quotation' : 'Pre-Order',
+        o.itemName || '—',
+        o.portionUnit || 'Packet',
+        packets,
+        extrasStr,
+        subtotal > 0 ? `₹${subtotal.toLocaleString('en-IN')}` : '—',
+        discountInfo,
+        `₹${finalAmt.toLocaleString('en-IN')}`,
+        o.deliveryType === 'Self Service' ? 'Kitchen Pickup' : 'Delivery',
+        o.customerName || '—',
+        o.mobileNumber || '—',
+        o.orderDate ? new Date(o.orderDate).toDateString() : '—',
+        o.address || '—',
+        o.foodRequirements || '—',
+        o.additionalNotes || '—',
+        o.status || 'Pending',
+        o.createdAt ? new Date(o.createdAt).toLocaleString('en-IN') : '—',
+      ];
+    });
+
+    const csvContent =
+      '\uFEFF' + [headers, ...rows].map((row) => row.map(escapeCsvVal).join(',')).join('\r\n');
+    return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  };
+
+  // Client-side fallback generator for Kitchen Preparation Sheet
+  const generateClientKitchenPrepCsv = (ordersList, dateStr) => {
+    const lines = [];
+    lines.push(['MI CATERING SERVICES - KITCHEN PREPARATION & BOOKED ORDERS REVIEW']);
+    const totalPackets = (ordersList || []).reduce((sum, o) => sum + (Number(o.numberOfPackets) || 0), 0);
+    lines.push([
+      `Event / Prep Date: ${dateStr ? new Date(dateStr).toDateString() : 'All Dates'} | Total Bookings: ${(ordersList || []).length} | Total Packets: ${totalPackets}`,
+    ]);
+    lines.push([]);
+
+    // Section 1: Main Dishes
+    lines.push(['1. MAIN DISHES TO PREPARE (KITCHEN QUANTITIES)']);
+    lines.push(['Main Dish / Menu Item', 'Portion Unit', 'Total Quantity (Packets)', 'Orders Count', 'Revenue Est.']);
+    const dishMap = {};
+    (ordersList || []).forEach((o) => {
+      const key = `${o.itemName}___${o.portionUnit || 'Packet'}`;
+      if (!dishMap[key]) {
+        dishMap[key] = {
+          name: o.itemName,
+          portionUnit: o.portionUnit || 'Packet',
+          quantity: 0,
+          ordersCount: 0,
+          subtotal: 0,
+        };
+      }
+      dishMap[key].quantity += Number(o.numberOfPackets) || 0;
+      dishMap[key].ordersCount += 1;
+      dishMap[key].subtotal += Number(o.subtotalAmount || o.estimatedAmount) || 0;
+    });
+    Object.values(dishMap).forEach((d) => {
+      lines.push([d.name, d.portionUnit, d.quantity, d.ordersCount, `₹${d.subtotal.toLocaleString('en-IN')}`]);
+    });
+    lines.push([]);
+
+    // Section 2: Extra Side Dishes
+    lines.push(['2. EXTRA SIDE DISHES & ADD-ONS TO PREPARE']);
+    lines.push(['Extra Side Dish / Add-On', 'Portion / Grammage', 'Total Portions', 'Orders Count', 'Extra Revenue']);
+    const extrasMap = {};
+    (ordersList || []).forEach((o) => {
+      if (Array.isArray(o.selectedExtras)) {
+        o.selectedExtras.forEach((ex) => {
+          if (!ex.name) return;
+          const key = `${ex.name}___${ex.portion || ''}`;
+          if (!extrasMap[key]) {
+            extrasMap[key] = {
+              name: ex.name,
+              portion: ex.portion || '—',
+              quantity: 0,
+              ordersCount: 0,
+              revenue: 0,
+            };
+          }
+          extrasMap[key].quantity += Number(ex.quantity) || 1;
+          extrasMap[key].ordersCount += 1;
+          extrasMap[key].revenue += (Number(ex.price) || 0) * (Number(ex.quantity) || 1);
+        });
+      }
+    });
+    Object.values(extrasMap).forEach((e) => {
+      lines.push([e.name, e.portion, e.quantity, e.ordersCount, `₹${e.revenue.toLocaleString('en-IN')}`]);
+    });
+    lines.push([]);
+
+    // Section 3: All Booked Orders Manifest
+    lines.push(['3. ALL BOOKED ORDERS (DISPATCH & CUSTOMER MANIFEST)']);
+    lines.push([
+      'Order Ref',
+      'Type',
+      'Item Name',
+      'Portion Unit',
+      'Packets',
+      'Delivery Mode',
+      'Customer Name',
+      'Mobile Number',
+      'Scheduled Date',
+      'Delivery Address',
+      'Side Dishes',
+      'Total Payable',
+      'Status',
+    ]);
+    (ordersList || []).forEach((o) => {
+      const extrasStr =
+        Array.isArray(o.selectedExtras) && o.selectedExtras.length > 0
+          ? o.selectedExtras.map((e) => `${e.name} (${e.quantity || 1})`).join('; ')
+          : '-';
+      const finalAmt = Number(o.finalAmount) || Number(o.estimatedAmount) || 0;
+      lines.push([
+        `#${(o._id || '').toString().slice(-6).toUpperCase()}`,
+        o.orderType === 'quotation' ? 'Quotation' : 'Pre-Order',
+        o.itemName || '—',
+        o.portionUnit || 'Packet',
+        Number(o.numberOfPackets) || 0,
+        o.deliveryType || 'Delivery',
+        o.customerName || '—',
+        o.mobileNumber || '—',
+        o.orderDate ? new Date(o.orderDate).toDateString() : '—',
+        o.address || '-',
+        extrasStr,
+        `₹${finalAmt.toLocaleString('en-IN')}`,
+        o.status || 'Pending',
+      ]);
+    });
+
+    const csvContent =
+      '\uFEFF' + lines.map((row) => row.map(escapeCsvVal).join(',')).join('\r\n');
+    return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  };
+
   const handleExport = async (format = 'xlsx', action = 'download') => {
     setExportLoading(true);
     try {
-      const params = new URLSearchParams();
-      if (filters.date) params.set('date', filters.date);
-      if (filters.status) params.set('status', filters.status);
-      if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
-      if (filters.orderType) params.set('orderType', filters.orderType);
-      if (filters.search) params.set('search', filters.search);
-      if (format === 'csv') params.set('format', 'csv');
+      const params = {};
+      if (filters.date) params.date = filters.date;
+      if (filters.status) params.status = filters.status;
+      if (filters.deliveryType) params.deliveryType = filters.deliveryType;
+      if (filters.orderType) params.orderType = filters.orderType;
+      if (filters.search) params.search = filters.search;
+      if (format === 'csv') params.format = 'csv';
 
-      const token = localStorage.getItem('mi_admin_token');
-      const res = await fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      let blob;
+      let effectiveExt = format === 'csv' ? 'csv' : 'xlsx';
+      let mime =
+        format === 'csv'
+          ? 'text/csv;charset=utf-8;'
+          : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
-      if (!res.ok) throw new Error('Export failed');
+      try {
+        const res = await api.get('/catering/admin/orders/export/excel', {
+          params,
+          responseType: 'blob',
+        });
+        blob = res.data;
 
-      const blob = await res.blob();
-      const ext = format === 'csv' ? 'csv' : 'xlsx';
-      const mime = format === 'csv'
-        ? 'text/csv;charset=utf-8;'
-        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      const filename = `catering-orders-${filters.deliveryType ? filters.deliveryType.toLowerCase().replace(/\s+/g, '-') + '-' : ''}${filters.date || 'all'}.${ext}`;
+        // Double check: if blob contains HTML (e.g. from an unrouted proxy or SPA rewrite), reject it
+        if (blob instanceof Blob) {
+          const textPreview = await blob.slice(0, 100).text();
+          if (
+            textPreview.toLowerCase().includes('<!doctype') ||
+            textPreview.toLowerCase().includes('<html')
+          ) {
+            throw new Error('API returned HTML page instead of spreadsheet data.');
+          }
+        }
+      } catch (backendErr) {
+        console.warn('Backend export unavailable or returned HTML; generating clean CSV on device:', backendErr);
+        blob = generateClientOrdersCsv(orders);
+        effectiveExt = 'csv';
+        mime = 'text/csv;charset=utf-8;';
+      }
+
+      const filename = `catering-orders-${filters.deliveryType ? filters.deliveryType.toLowerCase().replace(/\s+/g, '-') + '-' : ''}${filters.date || 'all'}.${effectiveExt}`;
 
       if (action === 'share') {
         await shareOrDownloadFile(blob, filename, mime, 'MI Catering Orders');
       } else {
         triggerMobileDownload(blob, filename, mime);
-        toast.success(`Downloaded ${ext.toUpperCase()} successfully!`);
+        toast.success(`Downloaded ${effectiveExt.toUpperCase()} successfully!`);
       }
       setShowExportModal(false);
-    } catch {
+    } catch (err) {
+      console.error(err);
       toast.error('Export failed. Please check network connection.');
     } finally {
       setExportLoading(false);
@@ -404,36 +608,56 @@ export default function CateringOrdersPanel() {
   const handleExportKitchenPrep = async (format = 'xlsx', action = 'download') => {
     setExportLoading(true);
     try {
-      const params = new URLSearchParams();
-      params.set('mode', 'prep');
-      if (filters.date) params.set('date', filters.date);
-      if (filters.deliveryType) params.set('deliveryType', filters.deliveryType);
-      if (filters.status) params.set('status', filters.status);
-      if (filters.orderType) params.set('orderType', filters.orderType);
-      if (filters.search) params.set('search', filters.search);
-      if (format === 'csv') params.set('format', 'csv');
+      const params = { mode: 'prep' };
+      if (filters.date) params.date = filters.date;
+      if (filters.deliveryType) params.deliveryType = filters.deliveryType;
+      if (filters.status) params.status = filters.status;
+      if (filters.orderType) params.orderType = filters.orderType;
+      if (filters.search) params.search = filters.search;
+      if (format === 'csv') params.format = 'csv';
 
-      const token = localStorage.getItem('mi_admin_token');
-      const res = await fetch(`/api/catering/admin/orders/export/excel?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      let blob;
+      let effectiveExt = format === 'csv' ? 'csv' : 'xlsx';
+      let mime =
+        format === 'csv'
+          ? 'text/csv;charset=utf-8;'
+          : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
-      if (!res.ok) throw new Error('Export failed');
+      try {
+        const res = await api.get('/catering/admin/orders/export/excel', {
+          params,
+          responseType: 'blob',
+        });
+        blob = res.data;
 
-      const blob = await res.blob();
-      const ext = format === 'csv' ? 'csv' : 'xlsx';
-      const mime = format === 'csv'
-        ? 'text/csv;charset=utf-8;'
-        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      const filename = `kitchen-prep-review-${filters.date || 'all'}.${ext}`;
+        // Double check: if blob contains HTML, reject it
+        if (blob instanceof Blob) {
+          const textPreview = await blob.slice(0, 100).text();
+          if (
+            textPreview.toLowerCase().includes('<!doctype') ||
+            textPreview.toLowerCase().includes('<html')
+          ) {
+            throw new Error('API returned HTML page instead of spreadsheet data.');
+          }
+        }
+      } catch (backendErr) {
+        console.warn('Backend prep export unavailable or returned HTML; generating clean CSV on device:', backendErr);
+        blob = generateClientKitchenPrepCsv(orders, filters.date);
+        effectiveExt = 'csv';
+        mime = 'text/csv;charset=utf-8;';
+      }
+
+      const filename = `kitchen-prep-review-${filters.date || 'all'}.${effectiveExt}`;
 
       if (action === 'share') {
         await shareOrDownloadFile(blob, filename, mime, 'Kitchen Prep Review');
       } else {
         triggerMobileDownload(blob, filename, mime);
-        toast.success(`Downloaded Kitchen Prep ${ext.toUpperCase()}!`);
+        toast.success(`Downloaded Kitchen Prep ${effectiveExt.toUpperCase()}!`);
       }
-    } catch {
+      setShowPrepModal(false);
+    } catch (err) {
+      console.error(err);
       toast.error('Preparation sheet export failed');
     } finally {
       setExportLoading(false);
@@ -674,20 +898,25 @@ export default function CateringOrdersPanel() {
                     📅 {new Date(o.orderDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                <div className="order-card-actions">
                   <button
                     type="button"
-                    className="btn-action btn-action--print"
+                    className="btn-card-action btn-card-action--print"
                     onClick={() => setPrintSlipOrder(o)}
                     title="Print receipt / kitchen slip"
-                    style={{ padding: '0.35rem 0.55rem', fontSize: '0.82rem' }}
                   >
-                    🖨️ Slip
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="6 9 6 2 18 2 18 9" />
+                      <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                      <rect x="6" y="14" width="12" height="8" />
+                    </svg>
+                    <span>Slip</span>
                   </button>
                   <select
                     className={`status-badge-select status-${o.status.toLowerCase()}`}
                     value={o.status}
                     onChange={(e) => updateStatus(o._id, e.target.value)}
+                    aria-label="Update order status"
                   >
                     {['Pending', 'Confirmed', 'Completed', 'Cancelled'].map((s) => (
                       <option key={s} value={s}>{s}</option>
@@ -695,12 +924,17 @@ export default function CateringOrdersPanel() {
                   </select>
                   <button
                     type="button"
-                    className="btn-action btn-action--delete"
+                    className="btn-card-action btn-card-action--delete"
                     onClick={() => deleteOrder(o._id, o.customerName)}
                     title="Delete order request"
-                    style={{ padding: '0.35rem 0.55rem', fontSize: '0.85rem' }}
+                    aria-label="Delete order"
                   >
-                    🗑️
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      <line x1="10" y1="11" x2="10" y2="17" />
+                      <line x1="14" y1="11" x2="14" y2="17" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -951,24 +1185,33 @@ export default function CateringOrdersPanel() {
                       </select>
                     </td>
                     <td style={{ textAlign: 'center' }}>
-                      <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'center' }}>
+                      <div className="table-action-group">
                         <button
                           type="button"
-                          className="btn-action btn-action--print"
+                          className="btn-card-action btn-card-action--print"
                           onClick={() => setPrintSlipOrder(o)}
                           title="Print receipt / kitchen slip"
-                          style={{ padding: '0.35rem 0.55rem', fontSize: '0.85rem' }}
                         >
-                          🖨️
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="6 9 6 2 18 2 18 9" />
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                            <rect x="6" y="14" width="12" height="8" />
+                          </svg>
+                          <span>Slip</span>
                         </button>
                         <button
                           type="button"
-                          className="btn-action btn-action--delete"
+                          className="btn-card-action btn-card-action--delete"
                           onClick={() => deleteOrder(o._id, o.customerName)}
                           title="Delete order request"
-                          style={{ padding: '0.35rem 0.55rem', fontSize: '0.85rem' }}
+                          aria-label="Delete order"
                         >
-                          🗑️
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="3 6 5 6 21 6" />
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            <line x1="10" y1="11" x2="10" y2="17" />
+                            <line x1="14" y1="11" x2="14" y2="17" />
+                          </svg>
                         </button>
                       </div>
                     </td>

@@ -41,22 +41,87 @@ export default function EnquiryPanel({ resource, itemLabel }) {
     }
   };
 
-  const exportFile = async (format = 'xlsx') => {
-    const token = localStorage.getItem('mi_admin_token');
-    const isCsv = format === 'csv';
-    try {
-      const res = await fetch(`/api/${resource}/admin/enquiries/export/excel?format=${format}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error('Export failed');
+  const escapeCsvVal = (val) => {
+    if (val === null || val === undefined) return '';
+    const s = String(val).replace(/"/g, '""');
+    if (s.search(/("|,|\n|\r)/g) >= 0) {
+      return `"${s}"`;
+    }
+    return s;
+  };
 
-      const blob = await res.blob();
-      const ext = isCsv ? 'csv' : 'xlsx';
-      const mime = isCsv
+  const generateClientEnquiriesCsv = (items, resName) => {
+    const isMasala = resName === 'masala';
+    const headers = isMasala
+      ? ['Product', 'Quantity (kg)', 'Customer', 'Phone', 'Address', 'Message', 'Status', 'Submitted At']
+      : ['Product', 'Size', 'Quantity', 'Customer', 'Phone', 'Address', 'Additional Requirements', 'Status', 'Submitted At'];
+
+    const dataRows = (items || []).map((e) => {
+      if (isMasala) {
+        return [
+          e.productName || '—',
+          e.quantityKg || '—',
+          e.customerName || '—',
+          e.phoneNumber || '—',
+          e.address || '—',
+          e.message || '—',
+          e.status || 'Pending',
+          e.createdAt ? new Date(e.createdAt).toLocaleString() : '—',
+        ];
+      } else {
+        return [
+          e.productName || '—',
+          e.size || '—',
+          e.quantity || '—',
+          e.customerName || '—',
+          e.phoneNumber || '—',
+          e.address || '—',
+          e.additionalRequirements || '—',
+          e.status || 'Pending',
+          e.createdAt ? new Date(e.createdAt).toLocaleString() : '—',
+        ];
+      }
+    });
+
+    const csvContent =
+      '\uFEFF' + [headers, ...dataRows].map((row) => row.map(escapeCsvVal).join(',')).join('\r\n');
+    return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  };
+
+  const exportFile = async (format = 'xlsx') => {
+    let effectiveExt = format === 'csv' ? 'csv' : 'xlsx';
+    let mime =
+      format === 'csv'
         ? 'text/csv;charset=utf-8;'
         : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      const filename = `${resource}-enquiries.${ext}`;
+    let blob;
 
+    try {
+      const res = await api.get(`/${resource}/admin/enquiries/export/excel`, {
+        params: { format },
+        responseType: 'blob',
+      });
+      blob = res.data;
+
+      // Double check: if blob contains HTML, reject it
+      if (blob instanceof Blob) {
+        const textPreview = await blob.slice(0, 100).text();
+        if (
+          textPreview.toLowerCase().includes('<!doctype') ||
+          textPreview.toLowerCase().includes('<html')
+        ) {
+          throw new Error('API returned HTML page instead of spreadsheet data.');
+        }
+      }
+    } catch (backendErr) {
+      console.warn('Backend export unavailable or returned HTML; generating clean CSV on device:', backendErr);
+      blob = generateClientEnquiriesCsv(rows, resource);
+      effectiveExt = 'csv';
+      mime = 'text/csv;charset=utf-8;';
+    }
+
+    try {
+      const filename = `${resource}-enquiries.${effectiveExt}`;
       const fileBlob = new Blob([blob], { type: mime });
       const url = window.URL.createObjectURL(fileBlob);
       const a = document.createElement('a');
@@ -69,7 +134,7 @@ export default function EnquiryPanel({ resource, itemLabel }) {
         if (document.body.contains(a)) document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       }, 1000);
-      toast.success(`Downloaded ${ext.toUpperCase()} successfully!`);
+      toast.success(`Downloaded ${effectiveExt.toUpperCase()} successfully!`);
     } catch {
       toast.error('Export failed');
     }
